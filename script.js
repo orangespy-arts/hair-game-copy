@@ -13,6 +13,38 @@ document.addEventListener('DOMContentLoaded', () => {
     let gameInProgress = true;
     let hairCount = 0;
     const hairsToWin = 15;
+    let timeLeft = 60;
+    let timerInterval;
+    let movementInterval;
+
+    const timeDisplay = document.getElementById('time');
+    
+    function moveHead() {
+        const movement = Math.sin(Date.now() / 1000) * 20; // Smooth sinusoidal movement
+        characterArea.style.transform = `translateX(${movement}px)`;
+    }
+
+    function startMovement() {
+        // Update head position every 16ms (approximately 60fps)
+        movementInterval = setInterval(moveHead, 16);
+    }
+
+    function startTimer() {
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            timeDisplay.textContent = timeLeft;
+            
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                gameInProgress = false;
+                stopBackgroundMusic();
+                hairSelectionContainer.classList.add('hidden');
+                successMessage.classList.remove('hidden');
+                successMessage.querySelector('h2').textContent = 'Time\'s up!';
+                successMessage.querySelector('p').textContent = 'Better luck next time!';
+            }
+        }, 1000);
+    }
 
     // Initialize Audio
     initAudio();
@@ -21,6 +53,10 @@ document.addEventListener('DOMContentLoaded', () => {
     loadSound('success', 'success.mp3');
     // start gentle background music at 100 BPM
     startBackgroundMusic(100);
+
+    // Start the timer and movement
+    startTimer();
+    startMovement();
 
     hairOptions.forEach(hairEl => {
         hairEl.addEventListener('dragstart', (e) => {
@@ -85,9 +121,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function completeGame() {
         gameInProgress = false;
+        clearInterval(timerInterval);  // Stop the timer when player wins
+        clearInterval(movementInterval); // Stop the head movement
         stopBackgroundMusic();
         // Change to happy man
         manImage.src = 'happy_man.png';
+        characterArea.style.transform = 'translateX(0)'; // Reset position
         hairSelectionContainer.classList.add('hidden');
         successMessage.classList.remove('hidden');
         // play a layered exciting win sound
@@ -96,8 +135,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function resetGame() {
+        clearInterval(timerInterval);
+        clearInterval(movementInterval);
         gameInProgress = true;
         hairCount = 0;
+        timeLeft = 60;
+        timeDisplay.textContent = timeLeft;
+        startTimer();
+        startMovement();
         placedHairContainer.innerHTML = '';
         manImage.src = 'bald_man.png';
         hairSelectionContainer.classList.remove('hidden');
