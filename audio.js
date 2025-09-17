@@ -38,17 +38,39 @@ export async function loadSound(name, url) {
     }
 }
 
-export function playSound(name) {
+export let activeBackgroundMusic = null;
+
+export function playSound(name, loop = false) {
     if (!audioContext || !audioBuffers.has(name)) return;
-    
     if (audioContext.state === 'suspended') {
         audioContext.resume();
     }
-
     const source = audioContext.createBufferSource();
     source.buffer = audioBuffers.get(name);
+    source.loop = loop;
     source.connect(audioContext.destination);
     source.start(0);
+    
+    // Track the background music source
+    if (loop) {
+        if (activeBackgroundMusic) {
+            try {
+                activeBackgroundMusic.stop();
+            } catch(e) {}
+        }
+        activeBackgroundMusic = source;
+    }
+    
+    return source;
+}
+
+export function stopMusic() {
+    if (activeBackgroundMusic) {
+        try {
+            activeBackgroundMusic.stop();
+            activeBackgroundMusic = null;
+        } catch(e) {}
+    }
 }
 
 /* start a playful background loop around given BPM (100 default) */
