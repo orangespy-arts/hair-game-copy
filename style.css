@@ -1,0 +1,208 @@
+:root {
+    --bg-color: #f0f8ff;
+    --text-color: #333;
+    --accent-color: #4a90e2;
+    --container-bg: #ffffff;
+    --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: 'Noto Sans', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background-color: #ffffff;
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
+
+#game-container {
+    background-color: transparent;
+    border-radius: 16px;
+    box-shadow: none;
+    padding: 2rem;
+    text-align: center;
+    max-width: 700px;
+    width: 95%;
+    transition: transform 0.3s ease;
+}
+
+header h1 {
+    color: var(--accent-color);
+    margin-bottom: 0.5rem;
+}
+
+header p {
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+#character-area {
+    position: relative;
+    width: 380px;
+    height: 380px;
+    margin: 0 auto 2rem;
+}
+
+#man-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+#drop-zone {
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 130px;
+    height: 110px;
+    border-radius: 50% / 40%;
+    transition: background-color 0.2s;
+}
+
+#drop-zone.over {
+    background-color: rgba(74, 144, 226, 0.2);
+    border: 2px dashed var(--accent-color);
+}
+
+#placed-hair-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden; /* Hide hair dropped outside the area */
+}
+
+#placed-hair-container img {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    transform-origin: center;
+    transition: transform 0.1s linear;
+}
+
+#hair-selection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    background-color: #e6f0fa;
+    border-radius: 12px;
+}
+
+.hair-list {
+    display: flex;
+    gap: 0.6rem;
+}
+
+.hair-dark { filter: none; }
+.hair-blonde { filter: sepia(0.35) saturate(1.2) hue-rotate(20deg) brightness(1.15); }
+.hair-gray { filter: grayscale(0.9) brightness(0.9) contrast(0.9); }
+
+.hair-option {
+    width: 90px;
+    height: 90px;
+    object-fit: contain;
+    cursor: grab;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 6px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.hair-option:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.hair-option.dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+    transform: scale(1.1);
+}
+
+.hair-option.straight {
+    transform: scale(1) rotate(-5deg);
+}
+
+.hair-option.thin {
+    width: 70px;
+    height: 70px;
+    opacity: 0.95;
+}
+
+.hair-option.wavy {
+    transform: rotate(-2deg) scale(1.02);
+}
+
+.hair-option.curly {
+    transform: rotate(3deg) scale(1.05);
+}
+
+.placed-dark-straight {
+    transform: rotate(-3deg);
+}
+
+.placed-blonde-straight {
+    transform: rotate(-2deg);
+}
+
+.placed-gray-straight {
+    transform: rotate(-4deg);
+}
+
+.placed-dark-wavy {
+    transform: rotate(6deg);
+}
+
+.placed-blonde-wavy {
+    transform: rotate(8deg);
+}
+
+.placed-gray-wavy {
+    transform: rotate(5deg);
+}
+
+.placed-dark-curly {
+    transform: rotate(-10deg);
+}
+
+.placed-blonde-curly {
+    transform: rotate(-12deg);
+}
+
+.placed-gray-curly {
+    transform: rotate(-8deg);
+}
+
+#success-message {
+    padding: 1rem;
+}
+
+#reset-button {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: background-color 0.2s;
+}
+
+#reset-button:hover {
+    background-color: #357abd;
+}
+
+.hidden {
+    display: none;
+}

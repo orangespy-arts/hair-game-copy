@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hair Today, Gone Tomorrow</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="importmap">
+    {
+        "imports": {
+            "./audio.js": "./audio.js"
+        }
+    }
+    </script>
+</head>
+<body>
+
+    <div id="game-container">
+        <header>
+            <h1>Give him some hair!</h1>
+            <p>Our friend is stressed from work and has lost his hair... and his confidence. Drag some hair from below and give him a new look!</p>
+        </header>
+
+        <main id="character-area">
+            <img src="bald_man.png" id="man-image" alt="A sad bald man">
+            <div id="drop-zone"></div>
+            <div id="placed-hair-container"></div>
+        </main>
+        
+        <div id="success-message" class="hidden">
+            <h2>Looking sharp!</h2>
+            <p>He feels like a new man! Thanks to you.</p>
+            <button id="reset-button">Play Again</button>
+        </div>
+
+        <footer id="hair-selection">
+            <p>Drag hair onto his head!</p>
+            <div class="hair-list">
+                <img src="hair_strand.png" class="hair-option hair-dark straight" draggable="true" alt="Dark straight strand" data-variant="dark-straight">
+                <img src="hair_strand.png" class="hair-option hair-blonde straight" draggable="true" alt="Blonde straight strand" data-variant="blonde-straight">
+                <img src="hair_strand.png" class="hair-option hair-gray straight thin" draggable="true" alt="Gray straight strand" data-variant="gray-straight">
+
+                <img src="hair_strand.png" class="hair-option hair-dark wavy" draggable="true" alt="Dark wavy strand" data-variant="dark-wavy">
+                <img src="hair_strand.png" class="hair-option hair-blonde wavy" draggable="true" alt="Blonde wavy strand" data-variant="blonde-wavy">
+                <img src="hair_strand.png" class="hair-option hair-gray wavy thin" draggable="true" alt="Gray wavy strand" data-variant="gray-wavy">
+
+                <img src="hair_strand.png" class="hair-option hair-dark curly" draggable="true" alt="Dark curly strand" data-variant="dark-curly">
+                <img src="hair_strand.png" class="hair-option hair-blonde curly" draggable="true" alt="Blonde curly strand" data-variant="blonde-curly">
+                <img src="hair_strand.png" class="hair-option hair-gray curly thin" draggable="true" alt="Gray curly strand" data-variant="gray-curly">
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js" type="module"></script>
+</body>
+</html>
