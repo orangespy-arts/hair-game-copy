@@ -1,14 +1,14 @@
 :root {
-    --bg-color: #f0f8ff;
+    --bg-color: #ffeba6;
     --text-color: #333;
-    --accent-color: #4a90e2;
-    --container-bg: #ffffff;
+    --accent-color: #e64ebe;
+    --container-bg: #ffeba6;
     --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 body {
     font-family: 'Noto Sans', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    background-color: #ffffff;
+    background-color: #ffeba6;
     color: var(--text-color);
     display: flex;
     justify-content: center;
