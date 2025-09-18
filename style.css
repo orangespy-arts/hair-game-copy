@@ -293,6 +293,16 @@ body {
     overflow: hidden;
 }
 
+#page3 {
+    background-image: url('garden.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100vw;
+    max-width: none;
+    position: relative;
+}
+
 #game-container {
     background-color: transparent;
     border-radius: 16px;
@@ -306,6 +316,8 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    position: relative;
+    z-index: 1;
 }
 
 header h1 {
