@@ -71,6 +71,14 @@ function showPage(pageNum) {
     const pageToShow = document.getElementById(`page${pageNum}`);
     if (pageToShow) {
         pageToShow.classList.remove('hidden');
+        // If showing page 2, play the video
+        if (pageNum === 2) {
+            const video = document.getElementById('intro-video');
+            if (video) {
+                video.currentTime = 0; // Reset to start
+                video.play().catch(e => console.log('Video autoplay failed:', e));
+            }
+        }
     }
 }
 
@@ -87,6 +95,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const startBtn = document.getElementById('start-btn');
     const toGameBtn = document.getElementById('to-game-btn');
     const restartBtn = document.getElementById('restart-btn');
+
+    // Video handling
+    const video = document.getElementById('intro-video');
+    if (video) {
+        video.addEventListener('ended', () => {
+            showPage(3);
+            startTimer();
+            startMovement();
+            startBackgroundMusic(100);
+        });
+    }
 
     if (startBtn) {
         startBtn.addEventListener('click', () => {
