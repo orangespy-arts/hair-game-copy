@@ -31,14 +31,38 @@ body {
     display: block;
 }
 
+.title-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
 .game-title {
-    max-width: min(400px, 90vw);
-    width: 90%;
-    height: auto;
-    margin: 0.5rem auto;
-    display: block;
+    width: auto;
+    height: 100px;
     position: relative;
     z-index: 2;
+    margin-bottom: 0.5rem;
+}
+
+.game-description {
+    width: auto;
+    height: 60px;
+    position: relative;
+    z-index: 2;
+}
+
+.game-man {
+    max-width: min(300px, 60vw);
+    display: block;
+    margin: 1rem auto;
+    height: auto;
 }
 
 /* Water dropping effect styles */
