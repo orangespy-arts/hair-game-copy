@@ -402,8 +402,7 @@ header p {
     justify-content: center;
     gap: 0.5rem;
     padding: 1rem;
-    background-color: #e6f0fa;
-    border-radius: 12px;
+    background-color: transparent;
 }
 
 .hair-list {
