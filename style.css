@@ -426,8 +426,9 @@ header p {
     background-color: transparent;
     border-radius: 8px;
     padding: 6px;
-    position: fixed;  /* 改为固定定位，相对于viewport */
-    pointer-events: auto;  /* 恢复头发的交互性 */
+    position: fixed;
+    pointer-events: auto;
+    z-index: 5;
 }
 
 .hair-option:hover {
@@ -436,57 +437,180 @@ header p {
     z-index: 10;  /* 确保悬停的头发显示在最上层 */
 }
 
+/* Hair positioning - scattered across the page */
+/* You can easily modify these positions by changing the top, left, and transform values */
+
 /* Hair 1 - Dark Straight */
-.hair-option[src="Hair1.png"] {
-    top: 20%;
-    left: 15%;
+.hair-option[src="hair1.png"] {
+    top: 60%;
+    left: 10%;
     transform: rotate(-5deg);
 }
 
 /* Hair 2 - Blonde Straight */
-.hair-option[src="Hair2.png"] {
-    top: 35%;
-    left: 75%;
+.hair-option[src="hair2.png"] {
+    top: 60%;
+    left: 80%;
     transform: rotate(-15deg);
 }
 
 /* Hair 3 - Gray Straight */
-.hair-option[src="Hair3.png"] {
-    top: 65%;
-    left: 25%;
+.hair-option[src="hair3.png"] {
+    top: 60%;
+    left: 20%;
     transform: rotate(10deg);
 }
 
 /* Hair 4 - Dark Wavy */
-.hair-option[src="Hair4.png"] {
-    top: 45%;
+.hair-option[src="hair4.png"] {
+    top: 65%;
     left: 85%;
     transform: rotate(-8deg);
 }
 
 /* Hair 5 - Blonde Wavy */
-.hair-option[src="Hair5.png"] {
-    transform: translate(-8px, -8px) rotate(-4deg);
+.hair-option[src="hair5.png"] {
+    top: 70%;
+    left: 60%;
+    transform: rotate(-4deg);
 }
 
 /* Hair 6 - Gray Wavy */
-.hair-option[src="Hair6.png"] {
-    transform: translate(5px, 10px) rotate(5deg);
+.hair-option[src="hair6.png"] {
+    top: 63%;
+    left: 50%;
+    transform: rotate(5deg);
 }
 
 /* Hair 7 - Dark Curly */
-.hair-option[src="Hair7.png"] {
-    transform: translate(-120px, 3px) rotate(-6deg);
+.hair-option[src="hair7.png"] {
+    top: 80%;
+    left: 15%;
+    transform: rotate(-6deg);
 }
 
 /* Hair 8 - Blonde Curly */
-.hair-option[src="Hair8.png"] {
-    transform: translate(8px, -10px) rotate(4deg);
+.hair-option[src="hair8.png"] {
+    top: 63%;
+    left: 5%;
+    transform: rotate(4deg);
 }
 
 /* Hair 9 - Gray Curly */
-.hair-option[src="Hair9.png"] {
-    transform: translate(-6px, 8px) rotate(-3deg);
+.hair-option[src="hair9.png"] {
+    top: 75%;
+    left: 70%;
+    transform: rotate(-3deg);
+}
+
+/* Duplicate hair positioning - first set */
+#hair1-dup {
+    top: 72%;
+    left: 30%;
+    transform: rotate(10deg);
+}
+
+#hair2-dup {
+    top: 65%;
+    left: 15%;
+    transform: rotate(-20deg);
+}
+
+#hair3-dup {
+    top: 75%;
+    left: 40%;
+    transform: rotate(15deg);
+}
+
+#hair4-dup {
+    top: 83%;
+    left: 70%;
+    transform: rotate(-12deg);
+}
+
+#hair5-dup {
+    top: 85%;
+    left: 25%;
+    transform: rotate(8deg);
+}
+
+#hair6-dup {
+    top: 73%;
+    left: 60%;
+    transform: rotate(-8deg);
+}
+
+#hair7-dup {
+    top: 68%;
+    left: 90%;
+    transform: rotate(12deg);
+}
+
+#hair8-dup {
+    top: 75%;
+    left: 45%;
+    transform: rotate(-18deg);
+}
+
+#hair9-dup {
+    top: 80%;
+    left: 55%;
+    transform: rotate(6deg);
+}
+
+/* Duplicate hair positioning - second set */
+#hair1-dup2 {
+    top: 63%;
+    left: 35%;
+    transform: rotate(-25deg);
+}
+
+#hair2-dup2 {
+    top: 70%;
+    left: 75%;
+    transform: rotate(20deg);
+}
+
+#hair3-dup2 {
+    top: 75%;
+    left: 25%;
+    transform: rotate(-10deg);
+}
+
+#hair4-dup2 {
+    top: 90%;
+    left: 50%;
+    transform: rotate(18deg);
+}
+
+#hair5-dup2 {
+    top: 67%;
+    left: 40%;
+    transform: rotate(-15deg);
+}
+
+#hair6-dup2 {
+    top: 78%;
+    left: 10%;
+    transform: rotate(25deg);
+}
+
+#hair7-dup2 {
+    top: 76%;
+    left: 80%;
+    transform: rotate(-8deg);
+}
+
+#hair8-dup2 {
+    top: 87%;
+    left: 60%;
+    transform: rotate(14deg);
+}
+
+#hair9-dup2 {
+    top: 94%;
+    left: 85%;
+    transform: rotate(-22deg);
 }
 
 .placed-dark-straight {

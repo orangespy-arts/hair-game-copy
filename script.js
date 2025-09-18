@@ -316,6 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+
     dropZone.addEventListener('dragover', (e) => {
         e.preventDefault();
         if (gameInProgress) {
