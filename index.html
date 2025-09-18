@@ -43,8 +43,12 @@
 
     <!-- Page 2: Video (placeholder) -->
     <div id="page2" class="page-section hidden">
-        <!-- Replace src with your video file later -->
-        <video id="intro-video" controls>
+        <video id="intro-video" 
+            controls 
+            controlsList="nodownload"
+            oncontextmenu="return false;"
+            disablePictureInPicture
+            disableRemotePlayback>
             <source src="video.mp4" type="video/mp4">
         </video>
         <br>
@@ -52,6 +56,9 @@
 
     <!-- Page 3: Game -->
     <div id="page3" class="page-section hidden">
+        <audio id="bgm" src="BGM.wav" loop preload="auto"></audio>
+        <audio id="losing-sound" src="losing_sound.wav" preload="auto"></audio>
+        <audio id="winning-sound" src="winning_sound.wav" preload="auto"></audio>
         <div id="dialog-container"></div>
         <div id="game-container">
             <header>
@@ -69,7 +76,9 @@
             </header>
 
             <main id="character-area">
-                <img src="simple_man.png" id="man-image" alt="A simple bald man">
+                <div class="man-container">
+                    <img src="sad_man.png" id="man-image" alt="A simple bald man">
+                </div>
                 <div id="drop-zone"></div>
                 <div id="placed-hair-container"></div> 
             </main>
@@ -79,6 +88,13 @@
                 <p>He feels like a new man! Thanks to you.</p>
                 <img src="back_botton.png" id="back-button" class="nav-button hidden" alt="Back to Home" style="cursor: pointer;">
                 <img src="try_again_button.png" id="try-again-button" class="nav-button hidden" alt="Try Again" style="cursor: pointer;">
+            </div>
+            
+            <div id="failure-message" class="hidden">
+                <h2>Time's Up!</h2>
+                <p>Better luck next time!</p>
+                <img src="back_botton.png" id="back-button-fail" class="nav-button hidden" alt="Back to Home" style="cursor: pointer;">
+                <img src="try_again_button.png" id="try-again-button-fail" class="nav-button hidden" alt="Try Again" style="cursor: pointer;">
             </div>
 
             <footer id="hair-selection">

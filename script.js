@@ -1,4 +1,3 @@
-
 import { initAudio, loadSound, playSound, startBackgroundMusic, stopBackgroundMusic, playWinSound } from './audio.js';
 
 // Dialog management functions
@@ -67,10 +66,29 @@ function showPage(pageNum) {
     document.querySelectorAll('.page-section').forEach(page => {
         page.classList.add('hidden');
     });
+    
     // Show the requested page
     const pageToShow = document.getElementById(`page${pageNum}`);
     if (pageToShow) {
         pageToShow.classList.remove('hidden');
+        
+        // Start BGM when entering page 3
+        if (pageNum === 3) {
+            const bgm = document.getElementById('bgm');
+            if (bgm) {
+                bgm.volume = 0.5; // Set volume to 50%
+                bgm.currentTime = 0;
+                bgm.play().catch(e => console.log("BGM play failed:", e));
+            }
+        } else {
+            // Stop BGM when leaving page 3
+            const bgm = document.getElementById('bgm');
+            if (bgm) {
+                bgm.pause();
+                bgm.currentTime = 0;
+            }
+        }
+
         // If showing page 2, play the video
         if (pageNum === 2) {
             const video = document.getElementById('intro-video');
@@ -103,22 +121,31 @@ document.addEventListener('DOMContentLoaded', () => {
             showPage(3);
             startTimer();
             startMovement();
-            startBackgroundMusic(100);
+            startBackgroundMusic(100);  // Restore this line
         });
     }
 
+    // Initialize Audio with success sound
+    initAudio();
+    loadSound('pickup', 'pickup.mp3');
+    loadSound('drop', 'drop.mp3');
+    loadSound('success', 'success.mp3');
+    loadSound('losing', 'losing_sound.wav');
+
+    // Button click handlers with sound
     if (startBtn) {
         startBtn.addEventListener('click', () => {
+            playSound('success');
             showPage(2);
         });
     }
+
     if (toGameBtn) {
         toGameBtn.addEventListener('click', () => {
             showPage(3);
-            // Start timer and movement when continuing to game
             startTimer();
             startMovement();
-            startBackgroundMusic(100);
+            startBackgroundMusic(100);  // Restore this line
         });
     }
     if (restartBtn) {
@@ -135,14 +162,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (backButton) {
         backButton.addEventListener('click', () => {
-            showPage(1); // Go back to homepage
-            window.location.reload(); // Reset game state
+            playSound('success');
+            showPage(1);
+            window.location.reload();
         });
     }
 
     if (tryAgainButton) {
         tryAgainButton.addEventListener('click', () => {
-            resetGame(); // Reset the game but stay on page 3
+            playSound('success');
+            resetGame();
         });
     }
 
@@ -210,8 +239,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearInterval(timerInterval);
                 clearInterval(movementInterval);
                 gameInProgress = false;
-                stopBackgroundMusic();
-                // Change to sad man image for losing
+                
+                // Stop BGM before playing losing sound
+                const bgm = document.getElementById('bgm');
+                if (bgm) {
+                    bgm.pause();
+                    bgm.currentTime = 0;
+                }
+                
+                // Play losing sound
+                playSound('losing');
+                const losingSound = document.getElementById('losing-sound');
+                if (losingSound) {
+                    losingSound.currentTime = 0;
+                    losingSound.play().catch(e => console.log("Audio play failed:", e));
+                }
                 manImage.src = 'sad_man.png';
                 characterArea.style.transform = 'translateX(0)';
                 hairSelectionContainer.classList.add('hidden');
@@ -237,6 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadSound('pickup', 'pickup.mp3');
     loadSound('drop', 'drop.mp3');
     loadSound('success', 'success.mp3');
+    loadSound('losing', 'losing_sound.wav');
 
     hairOptions.forEach(hairEl => {
         hairEl.addEventListener('dragstart', (e) => {
@@ -307,7 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             placedHairContainer.appendChild(placedHair);
             
-            playSound('drop');
+            playSound('pickup');  // Changed from 'drop' to 'pickup'
             hairCount++;
             
             // Update the hair counter
@@ -335,7 +378,20 @@ document.addEventListener('DOMContentLoaded', () => {
         gameInProgress = false;
         clearInterval(timerInterval);
         clearInterval(movementInterval);
-        stopBackgroundMusic();
+        
+        // Stop BGM before playing winning sound
+        const bgm = document.getElementById('bgm');
+        if (bgm) {
+            bgm.pause();
+            bgm.currentTime = 0;
+        }
+        
+        // Play winning sound
+        const winningSound = document.getElementById('winning-sound');
+        if (winningSound) {
+            winningSound.currentTime = 0;
+            winningSound.play().catch(e => console.log("Audio play failed:", e));
+        }
         
         // Hide timer and hair counter
         document.getElementById('timer').style.display = 'none';
@@ -404,7 +460,7 @@ document.addEventListener('DOMContentLoaded', () => {
         manImage.src = 'simple_man.png';
         hairSelectionContainer.classList.remove('hidden');
         successMessage.classList.add('hidden');
-        startBackgroundMusic(100);
+        startBackgroundMusic(100);  // Restore this line
     }
 
     if (resetButton) {

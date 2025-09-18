@@ -649,3 +649,27 @@ header p {
     50% { transform: translateY(-50%) scale(1.05); }
     100% { transform: translateY(-50%) scale(1); }
 }
+
+/* Video player styling */
+#intro-video::-webkit-media-controls-panel {
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+#intro-video:hover::-webkit-media-controls-panel {
+    opacity: 1;
+}
+
+#intro-video::-webkit-media-controls-timeline {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+#intro-video::-webkit-media-controls-play-button,
+#intro-video::-webkit-media-controls-timeline-container {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+#intro-video::-webkit-media-controls-current-time-display,
+#intro-video::-webkit-media-controls-time-remaining-display {
+    color: white;
+}
