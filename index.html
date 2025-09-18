@@ -61,8 +61,16 @@
         <div id="game-container">
             <header>
                 <h1>DRAG & DROP</h1>
-                <div id="timer">You have <span id="time">15</span> seconds left to make him look different!</div>
-                <div id="hair-counter">Place <span id="hairs-remaining">5</span> hairs to make him happy!</div>
+                <div id="timer">
+                    <div class="top-text">Time Left</div>
+                    <div class="number"><span id="time">15</span></div>
+                    <div class="bottom-text">seconds</div>
+                </div>
+                <div id="hair-counter">
+                    <div class="top-text">Hairs Needed</div>
+                    <div class="number"><span id="hairs-remaining">5</span></div>
+                    <div class="bottom-text">to win</div>
+                </div>
             </header>
 
             <main id="character-area">

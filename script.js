@@ -202,9 +202,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function startTimer() {
         timerInterval = setInterval(() => {
             timeLeft--;
-            const timerElement = document.getElementById('timer');
+            const timeDisplay = document.getElementById('time');
             if (timeLeft > 0) {
-                timerElement.textContent = `You have ${timeLeft} seconds left to make him look different!`;
+                timeDisplay.textContent = timeLeft;
             }
             if (timeLeft <= 0) {
                 clearInterval(timerInterval);
@@ -221,10 +221,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Change timer display to "TIME'S UP!"
                 const timerElement = document.getElementById('timer');
-                timerElement.textContent = "TIME'S UP!";
-                timerElement.style.fontSize = '2rem';
+                timerElement.querySelector('.top-text').textContent = "TIME'S";
+                timerElement.querySelector('.number').textContent = "UP";
+                timerElement.querySelector('.bottom-text').textContent = "!";
                 timerElement.style.backgroundColor = '#ff0000';
-                timerElement.style.padding = '15px 25px';
                 // Show try again button for losing
                 document.getElementById('try-again-button').classList.remove('hidden');
                 document.getElementById('back-button').classList.add('hidden');
@@ -280,13 +280,30 @@ document.addEventListener('DOMContentLoaded', () => {
             if (hairVariant) placedHair.classList.add(`placed-${hairVariant}`);
             
             // Position the hair where it was dropped
-            const dropZoneRect = characterArea.getBoundingClientRect();
-            const x = e.clientX - dropZoneRect.left;
-            const y = e.clientY - dropZoneRect.top;
-
-            // Center the image on the cursor
-            placedHair.style.left = `${x - 15}px`; // half of width
-            placedHair.style.top = `${y - 15}px`; // half of height
+            const dropZoneRect = dropZone.getBoundingClientRect();
+            
+            // Get position relative to the drop zone
+            let x = e.clientX - dropZoneRect.left;
+            let y = e.clientY - dropZoneRect.top;
+            
+            // Constrain the position to stay within the drop zone boundaries
+            // Account for hair size (80px from CSS)
+            const hairSize = 80;
+            const halfHair = hairSize / 2;
+            
+            // Constrain x position
+            x = Math.max(halfHair, Math.min(dropZoneRect.width - halfHair, x));
+            
+            // Constrain y position
+            y = Math.max(halfHair, Math.min(dropZoneRect.height - halfHair, y));
+            
+            // Convert to percentage
+            const xPercent = (x / dropZoneRect.width) * 100;
+            const yPercent = (y / dropZoneRect.height) * 100;
+            
+            // Set the position
+            placedHair.style.left = `${xPercent}%`;
+            placedHair.style.top = `${yPercent}%`;
             
             placedHairContainer.appendChild(placedHair);
             

@@ -329,6 +329,7 @@ header p {
     height: min(380px, 45vh);
     margin: 0 auto;
     flex-grow: 1;
+    z-index: 1;
 }
 
 #man-image {
@@ -342,13 +343,14 @@ header p {
 
 #drop-zone {
     position: absolute;
-    top: 35px;
+    top: 20px;
     left: 50%;
     transform: translateX(-50%);
-    width: 160px;
-    height: 75px;
+    width: 320px;
+    height: 150px;
     border-radius: 20% / 50%;
     transition: background-color 0.2s;
+    z-index: 2;
 }
 
 #drop-zone.over {
@@ -359,19 +361,22 @@ header p {
 #placed-hair-container {
     position: absolute;
     top: 0;
-    left: 0;
+    left: -25%;
     width: 150%;
     height: 150%;
     pointer-events: none;
     overflow: hidden; /* Hide hair dropped outside the area */
+    z-index: 3;
 }
 
 #placed-hair-container img {
     position: absolute;
-    width: 40px;
-    height: 40px;
+    width: 80px;
+    height: 80px;
     transform-origin: center;
     transition: transform 0.1s linear;
+    margin-left: -40px;  /* Half the width to center */
+    margin-top: -40px;   /* Half the height to center */
 }
 
 #hair-selection {
@@ -577,39 +582,61 @@ header p {
 /* Timer and counter styling */
 #timer, #hair-counter {
     position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
     color: white;
-    padding: 12px 20px;
+    padding: 10px 20px;
     border-radius: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: max-content;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 140px;
 }
 
 #timer {
-    top: 380px;
+    left: 1300px;
     background-color: #ff4f4f;
-    font-size: 1.3rem;
     font-family: 'ANCA';
-    letter-spacing: 3px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    animation: pulse 2s infinite;
+    animation: pulseRight 2s infinite;
     z-index: 1000;
     transition: all 0.3s ease;
     border: 1px solid #000000;
 }
 
 #hair-counter {
-    top: 100px;
+    left: 200px;
     background-color: #4CAF50;
-    font-size: 1.3rem;
     font-family: 'ANCA';
-    letter-spacing: 3px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     z-index: 1000;
     border: 1px solid #000000;
+    animation: pulseLeft 2s infinite;
 }
 
-@keyframes pulse {
-    0% { transform: translateX(-50%) scale(1); }
-    50% { transform: translateX(-50%) scale(1.05); }
-    100% { transform: translateX(-50%) scale(1); }
+.top-text, .bottom-text {
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    line-height: 1;
+}
+
+.number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    line-height: 1;
+    margin: 5px 0;
+}
+
+@keyframes pulseRight {
+    0% { transform: translateY(-50%) scale(1); }
+    50% { transform: translateY(-50%) scale(1.05); }
+    100% { transform: translateY(-50%) scale(1); }
+}
+
+@keyframes pulseLeft {
+    0% { transform: translateY(-50%) scale(1); }
+    50% { transform: translateY(-50%) scale(1.05); }
+    100% { transform: translateY(-50%) scale(1); }
 }
