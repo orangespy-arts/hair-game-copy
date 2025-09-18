@@ -1,3 +1,15 @@
+/* Multi-page section styling */
+.page-section {
+    display: none;
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 2rem 0;
+}
+.page-section:not(.hidden) {
+    display: block;
+}
 :root {
     --bg-color: #ffeba6;
     --text-color: #333;

@@ -1,14 +1,56 @@
+
 import { initAudio, loadSound, playSound, startBackgroundMusic, stopBackgroundMusic, playWinSound } from './audio.js';
 
+// --- PAGE NAVIGATION LOGIC ---
+function showPage(pageNum) {
+    for (let i = 1; i <= 4; i++) {
+        const section = document.getElementById(`page${i}`);
+        if (section) section.classList.toggle('hidden', i !== pageNum);
+    }
+}
+
+// Initial page load: show homepage
 document.addEventListener('DOMContentLoaded', () => {
-    const hairOptions = document.querySelectorAll('.hair-option');
-    const dropZone = document.getElementById('drop-zone');
-    const characterArea = document.getElementById('character-area');
-    const hairSelectionContainer = document.getElementById('hair-selection');
-    const successMessage = document.getElementById('success-message');
-    const manImage = document.getElementById('man-image');
-    const placedHairContainer = document.getElementById('placed-hair-container');
-    const resetButton = document.getElementById('reset-button');
+    showPage(1);
+
+    // Button navigation
+    const startBtn = document.getElementById('start-btn');
+    const toGameBtn = document.getElementById('to-game-btn');
+    const restartBtn = document.getElementById('restart-btn');
+
+    if (startBtn) {
+        startBtn.addEventListener('click', () => {
+            showPage(2);
+        });
+    }
+    if (toGameBtn) {
+        toGameBtn.addEventListener('click', () => {
+            showPage(3);
+            // Optionally, you could auto-play the video and only enable the button after video ends
+        });
+    }
+    if (restartBtn) {
+        restartBtn.addEventListener('click', () => {
+            showPage(1);
+            // Optionally, reset game state here if needed
+            window.location.reload(); // full reload to reset everything
+        });
+    }
+
+    // --- GAME LOGIC BELOW (only runs when page 3 is shown) ---
+
+    // Only initialize game logic if page3 exists (prevents errors on other pages)
+    const page3 = document.getElementById('page3');
+    if (!page3) return;
+
+    const hairOptions = page3.querySelectorAll('.hair-option');
+    const dropZone = page3.querySelector('#drop-zone');
+    const characterArea = page3.querySelector('#character-area');
+    const hairSelectionContainer = page3.querySelector('#hair-selection');
+    const successMessage = page3.querySelector('#success-message');
+    const manImage = page3.querySelector('#man-image');
+    const placedHairContainer = page3.querySelector('#placed-hair-container');
+    const resetButton = page3.querySelector('#reset-button');
 
     let gameInProgress = true;
     let hairCount = 0;
@@ -17,15 +59,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let timerInterval;
     let movementInterval;
 
-    const timeDisplay = document.getElementById('time');
-    
+    const timeDisplay = page3.querySelector('#time');
+
     function moveHead() {
         const movement = Math.sin(Date.now() / 1000) * 20; // Smooth sinusoidal movement
         characterArea.style.transform = `translateX(${movement}px)`;
     }
 
     function startMovement() {
-        // Update head position every 16ms (approximately 60fps)
         movementInterval = setInterval(moveHead, 16);
     }
 
@@ -33,14 +74,13 @@ document.addEventListener('DOMContentLoaded', () => {
         timerInterval = setInterval(() => {
             timeLeft--;
             timeDisplay.textContent = timeLeft;
-            
             if (timeLeft <= 0) {
                 clearInterval(timerInterval);
                 gameInProgress = false;
                 stopBackgroundMusic();
                 hairSelectionContainer.classList.add('hidden');
                 successMessage.classList.remove('hidden');
-                successMessage.querySelector('h2').textContent = 'Time\'s up!';
+                successMessage.querySelector('h2').textContent = "Time's up!";
                 successMessage.querySelector('p').textContent = 'Better luck next time!';
             }
         }, 1000);
@@ -51,7 +91,6 @@ document.addEventListener('DOMContentLoaded', () => {
     loadSound('pickup', 'pickup.mp3');
     loadSound('drop', 'drop.mp3');
     loadSound('success', 'success.mp3');
-    // start gentle background music at 100 BPM
     startBackgroundMusic(100);
 
     // Start the timer and movement
@@ -119,20 +158,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+
     function completeGame() {
         gameInProgress = false;
-        clearInterval(timerInterval);  // Stop the timer when player wins
-        clearInterval(movementInterval); // Stop the head movement
+        clearInterval(timerInterval);
+        clearInterval(movementInterval);
         stopBackgroundMusic();
-        // Change to happy man
-        manImage.src = 'happy_man.png';
-        characterArea.style.transform = 'translateX(0)'; // Reset position
+        manImage.src = 'sucsess happy man.png'; // Use your happy man image
+        characterArea.style.transform = 'translateX(0)';
         hairSelectionContainer.classList.add('hidden');
         successMessage.classList.remove('hidden');
-        // play a layered exciting win sound
         playWinSound();
         playSound('success');
+        // After a short delay, go to ending page
+        setTimeout(() => {
+            showPage(4);
+        }, 2000);
     }
+
 
     function resetGame() {
         clearInterval(timerInterval);
@@ -144,11 +187,13 @@ document.addEventListener('DOMContentLoaded', () => {
         startTimer();
         startMovement();
         placedHairContainer.innerHTML = '';
-        manImage.src = 'bald_man.png';
+        manImage.src = 'game_start_man.png';
         hairSelectionContainer.classList.remove('hidden');
         successMessage.classList.add('hidden');
         startBackgroundMusic(100);
     }
 
-    resetButton.addEventListener('click', resetGame);
+    if (resetButton) {
+        resetButton.addEventListener('click', resetGame);
+    }
 });
