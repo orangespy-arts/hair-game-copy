@@ -44,15 +44,24 @@
 
     <!-- Page 2: Video (placeholder) -->
     <div id="page2" class="page-section hidden">
-        <video id="intro-video" 
-            controls 
-            controlsList="nodownload"
-            oncontextmenu="return false;"
-            disablePictureInPicture
-            disableRemotePlayback>
-            <source src="video.mp4" type="video/mp4">
-        </video>
-        <br>
+        <div class="video-container">
+            <div class="loading-overlay">
+                <div class="loading-spinner"></div>
+                <div id="loading-text">Loading video...</div>
+            </div>
+            <video id="intro-video" 
+                controls 
+                width="1280"
+                height="720"
+                controlsList="nodownload"
+                oncontextmenu="return false;"
+                playsinline
+                preload="auto"
+                poster="loading.png">
+                <source src="/video.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
     </div>
 
     <!-- Page 3: Game -->
