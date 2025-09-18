@@ -20,8 +20,11 @@
         <!-- Page 1: Homepage -->
     <div id="page1" class="page-section">
         <!-- Water drops -->
-        <img src="plant_my_hair_title.png" alt="Plant My Hair" class="game-title" style="max-width: 400px; display: block; margin: 1rem 0;">
-        <img src="game_start_man.png" alt="Game Start Man" style="max-width: 300px; display: block; margin: 1rem auto;">
+        <div class="title-container">
+            <img src="plant_my_hair_title.png" alt="Plant My Hair" class="game-title">
+            <img src="discription_start.png" alt="Game Description" class="game-description">
+        </div>
+        <img src="sad_man.png" alt="Sad Man" class="game-man">
          <div class="water-container">
             <!-- Original drops -->
             <img src="drop1.png" alt="Water Drop" class="water-drop drop1">
@@ -44,14 +47,12 @@
 
     <!-- Page 2: Video (placeholder) -->
     <div id="page2" class="page-section hidden">
-        <h2>Watch this short video!</h2>
         <!-- Replace src with your video file later -->
-        <video id="intro-video" width="960" height="540" controls>
-            <source src="" type="video/mp4">
-            Your browser does not support the video tag.
+        <video id="intro-video" controls>
+            <source src="video.mp4" type="video/mp4">
         </video>
         <br>
-        <button id="to-game-btn">Continue to Game</button>
+        <img src="skip_button.png" id="to-game-btn" alt="Skip to Game" style="cursor: pointer;">
     </div>
 
     <!-- Page 3: Game -->
@@ -65,9 +66,9 @@
             </header>
 
             <main id="character-area">
-                <img src="game_start_man.png" id="man-image" alt="A sad bald man">
+                <img src="simple_man.png" id="man-image" alt="A simple bald man">
                 <div id="drop-zone"></div>
-                <div id="placed-hair-container"></div>
+                <div id="placed-hair-container"></div> 
             </main>
             
             <div id="success-message" class="hidden">
@@ -94,13 +95,6 @@
                 </div>
             </footer>
         </div>
-    </div>
-
-    <!-- Page 4: Ending -->
-    <div id="page4" class="page-section hidden">
-        <h2>Congratulations!</h2>
-        <p>You finished the game!</p>
-        <button id="restart-btn">Back to Home</button>
     </div>
 
     <script src="script.js" type="module"></script>
