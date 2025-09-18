@@ -158,6 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let movementInterval;
 
     const timeDisplay = page3.querySelector('#time');
+    const hairsRemainingDisplay = page3.querySelector('#hairs-remaining');
 
     function moveHead() {
         const movement = Math.sin(Date.now() / 1000) * 20; // Smooth sinusoidal movement
@@ -171,7 +172,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function startTimer() {
         timerInterval = setInterval(() => {
             timeLeft--;
-            timeDisplay.textContent = timeLeft;
+            const timerElement = document.getElementById('timer');
+            if (timeLeft > 0) {
+                timerElement.textContent = `You have ${timeLeft} seconds left to make him look different!`;
+            }
             if (timeLeft <= 0) {
                 clearInterval(timerInterval);
                 clearInterval(movementInterval);
@@ -184,6 +188,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 successMessage.classList.remove('hidden');
                 successMessage.querySelector('h2').textContent = "Time's up!";
                 successMessage.querySelector('p').textContent = 'Better luck next time!';
+                
+                // Change timer display to "TIME'S UP!"
+                const timerElement = document.getElementById('timer');
+                timerElement.textContent = "TIME'S UP!";
+                timerElement.style.fontSize = '2rem';
+                timerElement.style.backgroundColor = '#ff0000';
+                timerElement.style.padding = '15px 25px';
                 // Show try again button for losing
                 document.getElementById('try-again-button').classList.remove('hidden');
                 document.getElementById('back-button').classList.add('hidden');
@@ -251,6 +262,15 @@ document.addEventListener('DOMContentLoaded', () => {
             
             playSound('drop');
             hairCount++;
+            
+            // Update the hair counter
+            const remainingHairs = hairsToWin - hairCount;
+            hairsRemainingDisplay.textContent = remainingHairs;
+            if (remainingHairs === 1) {
+                document.getElementById('hair-counter').textContent = 'Just 1 more hair to go!';
+            } else if (remainingHairs > 0) {
+                document.getElementById('hair-counter').textContent = `Place ${remainingHairs} hairs to make him happy!`;
+            }
 
             // Show message every 5 hairs
             if (hairCount % 5 === 0) {
@@ -269,6 +289,10 @@ document.addEventListener('DOMContentLoaded', () => {
         clearInterval(timerInterval);
         clearInterval(movementInterval);
         stopBackgroundMusic();
+        
+        // Hide timer and hair counter
+        document.getElementById('timer').style.display = 'none';
+        document.getElementById('hair-counter').style.display = 'none';
         
         // Create transition effect
         const transitionImg = document.createElement('img');
@@ -297,6 +321,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1600);
 
         hairSelectionContainer.classList.add('hidden');
+        const instructionText = document.querySelector('#hair-selection p');
+        if (instructionText) {
+         instructionText.classList.add('hidden');
+        }
         successMessage.classList.remove('hidden');
         successMessage.querySelector('h2').textContent = "Looking sharp!";
         successMessage.querySelector('p').textContent = "He feels like a new man! Thanks to you.";
@@ -314,7 +342,15 @@ document.addEventListener('DOMContentLoaded', () => {
         gameInProgress = true;
         hairCount = 0;
         timeLeft = 15;
-        timeDisplay.textContent = timeLeft;
+        
+        // Reset timer to original state
+        const timerElement = document.getElementById('timer');
+        timerElement.style.fontSize = '1.2rem';  // Reset to original size
+        timerElement.style.backgroundColor = '#ff4f4f';  // Reset to original color
+        timerElement.style.padding = '12px 20px';  // Reset to original padding
+        timerElement.style.display = 'block';  // Make sure it's visible
+        timerElement.textContent = `You have ${timeLeft} seconds left to make him look different!`;
+        
         startTimer();
         startMovement();
         placedHairContainer.innerHTML = '';
