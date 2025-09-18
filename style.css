@@ -389,21 +389,21 @@ header p {
 }
 
 #hair-selection {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 1rem;
+    position: static;  /* 移除flex布局 */
+    width: 100%;
+    height: 100%;
     background-color: transparent;
 }
 
 .hair-list {
-    display: flex;
-    gap: 0.6rem;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 0.5rem;
+    position: fixed;  /* 改为固定定位，相对于viewport */
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    padding: 0;
+    margin: 0;
+    pointer-events: none;  /* 让容器不影响交互 */
 }
 
 .hair-dark { filter: none; }
@@ -416,39 +416,70 @@ header p {
     object-fit: contain;
     cursor: grab;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-    background-color: #fff;
+    background-color: transparent;
     border-radius: 8px;
     padding: 6px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: fixed;  /* 改为固定定位，相对于viewport */
+    pointer-events: auto;  /* 恢复头发的交互性 */
 }
 
 .hair-option:hover {
-    transform: scale(1.1);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transform: scale(1.2) !important;  /* 使用 !important 来覆盖各个头发的transform */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    z-index: 10;  /* 确保悬停的头发显示在最上层 */
 }
 
-.hair-option.dragging {
-    opacity: 0.5;
-    cursor: grabbing;
-    transform: scale(1.1);
+/* Hair 1 - Dark Straight */
+.hair-option[src="Hair1.png"] {
+    top: 20%;
+    left: 15%;
+    transform: rotate(-5deg);
 }
 
-.hair-option.straight {
-    transform: scale(1) rotate(-5deg);
+/* Hair 2 - Blonde Straight */
+.hair-option[src="Hair2.png"] {
+    top: 35%;
+    left: 75%;
+    transform: rotate(-15deg);
 }
 
-.hair-option.thin {
-    width: 70px;
-    height: 70px;
-    opacity: 0.95;
+/* Hair 3 - Gray Straight */
+.hair-option[src="Hair3.png"] {
+    top: 65%;
+    left: 25%;
+    transform: rotate(10deg);
 }
 
-.hair-option.wavy {
-    transform: rotate(-2deg) scale(1.02);
+/* Hair 4 - Dark Wavy */
+.hair-option[src="Hair4.png"] {
+    top: 45%;
+    left: 85%;
+    transform: rotate(-8deg);
 }
 
-.hair-option.curly {
-    transform: rotate(3deg) scale(1.05);
+/* Hair 5 - Blonde Wavy */
+.hair-option[src="Hair5.png"] {
+    transform: translate(-8px, -8px) rotate(-4deg);
+}
+
+/* Hair 6 - Gray Wavy */
+.hair-option[src="Hair6.png"] {
+    transform: translate(5px, 10px) rotate(5deg);
+}
+
+/* Hair 7 - Dark Curly */
+.hair-option[src="Hair7.png"] {
+    transform: translate(-120px, 3px) rotate(-6deg);
+}
+
+/* Hair 8 - Blonde Curly */
+.hair-option[src="Hair8.png"] {
+    transform: translate(8px, -10px) rotate(4deg);
+}
+
+/* Hair 9 - Gray Curly */
+.hair-option[src="Hair9.png"] {
+    transform: translate(-6px, 8px) rotate(-3deg);
 }
 
 .placed-dark-straight {
