@@ -10,6 +10,17 @@
 .page-section:not(.hidden) {
     display: block;
 }
+
+#start-btn {
+    max-width: 200px;
+    transition: transform 0.2s ease;
+    display: block;
+    margin: 1rem auto;
+}
+
+#start-btn:hover {
+    transform: scale(1.1);
+}
 :root {
     --bg-color: #ffeba6;
     --text-color: #333;
