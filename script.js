@@ -1,6 +1,32 @@
 
 import { initAudio, loadSound, playSound, startBackgroundMusic, stopBackgroundMusic, playWinSound } from './audio.js';
 
+// Dialog management functions
+function showDialog(message) {
+    const dialogContainer = document.getElementById('dialog-container');
+    const dialog = document.createElement('div');
+    dialog.className = 'dialog-box';
+    dialog.textContent = message;
+    
+    // Remove any existing dialogs
+    dialogContainer.innerHTML = '';
+    dialogContainer.appendChild(dialog);
+
+    // Remove dialog after 2 seconds
+    setTimeout(() => {
+        dialog.remove();
+    }, 2000);
+}
+
+function getProgressMessage(hairCount) {
+    const messages = {
+        5: "Looking good! Keep going!",
+        10: "That's the spirit! He's starting to smile!",
+        15: "Almost there! Just a few more strands!"
+    };
+    return messages[hairCount] || "Nice work!";
+}
+
 // --- PAGE NAVIGATION LOGIC ---
 function showPage(pageNum) {
     for (let i = 1; i <= 4; i++) {
@@ -54,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let gameInProgress = true;
     let hairCount = 0;
-    const hairsToWin = 15;
+    const hairsToWin = 10;
     let timeLeft = 60;
     let timerInterval;
     let movementInterval;
@@ -76,12 +102,23 @@ document.addEventListener('DOMContentLoaded', () => {
             timeDisplay.textContent = timeLeft;
             if (timeLeft <= 0) {
                 clearInterval(timerInterval);
+                clearInterval(movementInterval);
                 gameInProgress = false;
                 stopBackgroundMusic();
                 hairSelectionContainer.classList.add('hidden');
                 successMessage.classList.remove('hidden');
                 successMessage.querySelector('h2').textContent = "Time's up!";
                 successMessage.querySelector('p').textContent = 'Better luck next time!';
+                // After a short delay, show the ending page with game over message
+                setTimeout(() => {
+                    showPage(4);
+                    const endingPage = document.getElementById('page4');
+                    if (endingPage) {
+                        endingPage.querySelector('h2').textContent = "Game Over";
+                        endingPage.querySelector('p').textContent = "Time's up! Would you like to try again?";
+                        endingPage.querySelector('#restart-btn').textContent = "Try Again";
+                    }
+                }, 2000);
             }
         }, 1000);
     }
@@ -151,6 +188,11 @@ document.addEventListener('DOMContentLoaded', () => {
             
             playSound('drop');
             hairCount++;
+
+            // Show message every 5 hairs
+            if (hairCount % 5 === 0) {
+                showDialog(getProgressMessage(hairCount));
+            }
 
             if (hairCount >= hairsToWin) {
                 completeGame();
