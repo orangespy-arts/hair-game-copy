@@ -5,7 +5,28 @@ function showDialog(message, type = 'success') {
     const dialogContainer = document.getElementById('dialog-container');
     const dialog = document.createElement('div');
     dialog.className = `dialog-box ${type}`; // Add type class for styling
-    dialog.textContent = message;
+    
+    // Check if message is an image file
+    if (message.endsWith('.png') || message.endsWith('.jpg') || message.endsWith('.gif')) {
+        const img = document.createElement('img');
+        img.src = message;
+        img.alt = 'Wrong area message';
+        
+        // Add specific class based on image name
+        if (message.includes('wrong1.png')) {
+            img.className = 'wrong-message-image wrong1-image';
+        } else if (message.includes('wrong2.png')) {
+            img.className = 'wrong-message-image wrong2-image';
+        } else if (message.includes('wrong3.png')) {
+            img.className = 'wrong-message-image wrong3-image';
+        } else {
+            img.className = 'wrong-message-image';
+        }
+        
+        dialog.appendChild(img);
+    } else {
+        dialog.textContent = message;
+    }
     
     // Remove any existing dialogs
     dialogContainer.innerHTML = '';
@@ -18,17 +39,12 @@ function showDialog(message, type = 'success') {
 }
 
 function getRandomWrongAreaMessage() {
-    const messages = [
-        "Ouch! That's not the right spot! You're making me upset!",
-        "Hey! My face is not a place for hair!",
-        "Come on, focus on my bald spot!",
-        "This isn’t what I meant by hair transplant!",
-        "Nope, that's definitely not where hair goes!",
-        "I need hair on my head, not there!",
-        "That tickles! But it's the wrong spot!",
-        "Are you even trying? That's not my head!"
+    const wrongImages = [
+        "wrong1.png",
+        "wrong2.png", 
+        "wrong3.png"
     ];
-    return messages[Math.floor(Math.random() * messages.length)];
+    return wrongImages[Math.floor(Math.random() * wrongImages.length)];
 }
 
 function handleWrongAreaDrop() {
