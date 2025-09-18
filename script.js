@@ -48,6 +48,7 @@ function handleWrongAreaDrop() {
         successMessage.classList.remove('hidden');
         successMessage.querySelector('h2').textContent = "Time's up!";
         successMessage.querySelector('p').textContent = 'Better luck next time!';
+        document.getElementById('man-image').src = 'sad_man.png';
     }
 }
 
@@ -62,15 +63,25 @@ function getProgressMessage(hairCount) {
 
 // --- PAGE NAVIGATION LOGIC ---
 function showPage(pageNum) {
-    for (let i = 1; i <= 4; i++) {
-        const section = document.getElementById(`page${i}`);
-        if (section) section.classList.toggle('hidden', i !== pageNum);
+    // Hide all pages first
+    document.querySelectorAll('.page-section').forEach(page => {
+        page.classList.add('hidden');
+    });
+    // Show the requested page
+    const pageToShow = document.getElementById(`page${pageNum}`);
+    if (pageToShow) {
+        pageToShow.classList.remove('hidden');
     }
 }
 
 // Initial page load: show homepage
 document.addEventListener('DOMContentLoaded', () => {
-    showPage(1);
+    // Hide all pages first
+    document.querySelectorAll('.page-section').forEach(page => {
+        page.classList.add('hidden');
+    });
+    // Show page 1
+    document.getElementById('page1').classList.remove('hidden');
 
     // Button navigation
     const startBtn = document.getElementById('start-btn');
@@ -178,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 gameInProgress = false;
                 stopBackgroundMusic();
                 // Change to sad man image for losing
-                manImage.src = 'sad man 2.png';
+                manImage.src = 'sad_man.png';
                 characterArea.style.transform = 'translateX(0)';
                 hairSelectionContainer.classList.add('hidden');
                 successMessage.classList.remove('hidden');
@@ -278,7 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
         transitionImg.style.width = '100%';
         transitionImg.style.height = '100%';
         transitionImg.style.opacity = '0';
-        transitionImg.src = 'sucsess happy man.png';
+        transitionImg.src = 'happy_man.png';
         transitionImg.style.transition = 'opacity 1.5s ease-in-out';
         
         // Add transition image on top of current image
@@ -292,7 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // After transition completes, clean up
         setTimeout(() => {
-            manImage.src = 'sucsess happy man.png';
+            manImage.src = 'happy_man.png';
             transitionImg.remove();
         }, 1600);
 
@@ -318,7 +329,7 @@ document.addEventListener('DOMContentLoaded', () => {
         startTimer();
         startMovement();
         placedHairContainer.innerHTML = '';
-        manImage.src = 'game_start_man.png';
+        manImage.src = 'simple_man.png';
         hairSelectionContainer.classList.remove('hidden');
         successMessage.classList.add('hidden');
         startBackgroundMusic(100);
