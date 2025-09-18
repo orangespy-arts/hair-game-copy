@@ -99,6 +99,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Add event listeners for the new image buttons
+    const backButton = document.getElementById('back-button');
+    const tryAgainButton = document.getElementById('try-again-button');
+
+    if (backButton) {
+        backButton.addEventListener('click', () => {
+            showPage(1); // Go back to homepage
+            window.location.reload(); // Reset game state
+        });
+    }
+
+    if (tryAgainButton) {
+        tryAgainButton.addEventListener('click', () => {
+            resetGame(); // Reset the game but stay on page 3
+        });
+    }
+
     // --- GAME LOGIC BELOW (only runs when page 3 is shown) ---
 
     // Only initialize game logic if page3 exists (prevents errors on other pages)
@@ -135,8 +152,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let gameInProgress = true;
     let hairCount = 0;
-    const hairsToWin = 20;
-    let timeLeft = 90;
+    const hairsToWin = 5;
+    let timeLeft = 15;
     let timerInterval;
     let movementInterval;
 
@@ -160,20 +177,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearInterval(movementInterval);
                 gameInProgress = false;
                 stopBackgroundMusic();
+                // Change to sad man image for losing
+                manImage.src = 'sad man 2.png';
+                characterArea.style.transform = 'translateX(0)';
                 hairSelectionContainer.classList.add('hidden');
                 successMessage.classList.remove('hidden');
                 successMessage.querySelector('h2').textContent = "Time's up!";
                 successMessage.querySelector('p').textContent = 'Better luck next time!';
-                // After a short delay, show the ending page with game over message
-                setTimeout(() => {
-                    showPage(4);
-                    const endingPage = document.getElementById('page4');
-                    if (endingPage) {
-                        endingPage.querySelector('h2').textContent = "Game Over";
-                        endingPage.querySelector('p').textContent = "Time's up! Would you like to try again?";
-                        endingPage.querySelector('#restart-btn').textContent = "Try Again";
-                    }
-                }, 2000);
+                // Show try again button for losing
+                document.getElementById('try-again-button').classList.remove('hidden');
+                document.getElementById('back-button').classList.add('hidden');
             }
         }, 1000);
     }
@@ -285,13 +298,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         hairSelectionContainer.classList.add('hidden');
         successMessage.classList.remove('hidden');
+        successMessage.querySelector('h2').textContent = "Looking sharp!";
+        successMessage.querySelector('p').textContent = "He feels like a new man! Thanks to you.";
+        // Show back button for winning
+        document.getElementById('back-button').classList.remove('hidden');
+        document.getElementById('try-again-button').classList.add('hidden');
         playWinSound();
         playSound('success');
-        
-        // After a longer delay to enjoy the happy face, go to ending page
-        setTimeout(() => {
-            showPage(4);
-        }, 4000); // Increased from 2000 to 4000ms for longer view of happy face
     }
 
 
@@ -300,7 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
         clearInterval(movementInterval);
         gameInProgress = true;
         hairCount = 0;
-        timeLeft = 90;
+        timeLeft = 15;
         timeDisplay.textContent = timeLeft;
         startTimer();
         startMovement();
