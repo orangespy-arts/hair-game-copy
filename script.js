@@ -67,25 +67,33 @@ function showPage(pageNum) {
         page.classList.add('hidden');
     });
     
-    // Show the requested page
+    // Stop all BGM first
+    const bgm = document.getElementById('bgm');
+    const homeBgm = document.getElementById('home-bgm');
+    if (bgm) {
+        bgm.pause();
+        bgm.currentTime = 0;
+    }
+    if (homeBgm) {
+        homeBgm.pause();
+        homeBgm.currentTime = 0;
+    }
+    
+    // Show the requested page and play appropriate BGM
     const pageToShow = document.getElementById(`page${pageNum}`);
     if (pageToShow) {
         pageToShow.classList.remove('hidden');
         
-        // Start BGM when entering page 3
-        if (pageNum === 3) {
-            const bgm = document.getElementById('bgm');
-            if (bgm) {
-                bgm.volume = 0.5; // Set volume to 50%
-                bgm.currentTime = 0;
-                bgm.play().catch(e => console.log("BGM play failed:", e));
+        // Start BGM based on page
+        if (pageNum === 1) {
+            if (homeBgm) {
+                homeBgm.volume = 0.5;
+                homeBgm.play().catch(e => console.log("Home BGM play failed:", e));
             }
-        } else {
-            // Stop BGM when leaving page 3
-            const bgm = document.getElementById('bgm');
+        } else if (pageNum === 3) {
             if (bgm) {
-                bgm.pause();
-                bgm.currentTime = 0;
+                bgm.volume = 0.5;
+                bgm.play().catch(e => console.log("BGM play failed:", e));
             }
         }
 
@@ -106,11 +114,31 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.page-section').forEach(page => {
         page.classList.add('hidden');
     });
-    // Show page 1
+    
+    // Show page 1 and initialize home BGM
     document.getElementById('page1').classList.remove('hidden');
+    const homeBgm = document.getElementById('home-bgm');
+    if (homeBgm) {
+        homeBgm.volume = 0.5;
+        // Try to play BGM on page load
+        homeBgm.play().catch(e => {
+            console.log("Autoplay prevented, waiting for user interaction");
+        });
+    }
 
-    // Button navigation
+    // Button navigation with improved click handling
     const startBtn = document.getElementById('start-btn');
+    if (startBtn) {
+        startBtn.addEventListener('click', () => {
+            if (homeBgm) {
+                homeBgm.pause();
+                homeBgm.currentTime = 0;
+            }
+            playSound('success');
+            showPage(2);
+        });
+    }
+
     const toGameBtn = document.getElementById('to-game-btn');
     const restartBtn = document.getElementById('restart-btn');
 
@@ -131,14 +159,6 @@ document.addEventListener('DOMContentLoaded', () => {
     loadSound('drop', 'drop.mp3');
     loadSound('success', 'success.mp3');
     loadSound('losing', 'losing_sound.wav');
-
-    // Button click handlers with sound
-    if (startBtn) {
-        startBtn.addEventListener('click', () => {
-            playSound('success');
-            showPage(2);
-        });
-    }
 
     if (toGameBtn) {
         toGameBtn.addEventListener('click', () => {
