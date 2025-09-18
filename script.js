@@ -2,10 +2,10 @@
 import { initAudio, loadSound, playSound, startBackgroundMusic, stopBackgroundMusic, playWinSound } from './audio.js';
 
 // Dialog management functions
-function showDialog(message) {
+function showDialog(message, type = 'success') {
     const dialogContainer = document.getElementById('dialog-container');
     const dialog = document.createElement('div');
-    dialog.className = 'dialog-box';
+    dialog.className = `dialog-box ${type}`; // Add type class for styling
     dialog.textContent = message;
     
     // Remove any existing dialogs
@@ -16,6 +16,39 @@ function showDialog(message) {
     setTimeout(() => {
         dialog.remove();
     }, 2000);
+}
+
+function getRandomWrongAreaMessage() {
+    const messages = [
+        "Ouch! That's not the right spot! You're making me upset!",
+        "Hey! My face is not a place for hair!",
+        "Come on, focus on my bald spot!",
+        "This isn’t what I meant by hair transplant!",
+        "Nope, that's definitely not where hair goes!",
+        "I need hair on my head, not there!",
+        "That tickles! But it's the wrong spot!",
+        "Are you even trying? That's not my head!"
+    ];
+    return messages[Math.floor(Math.random() * messages.length)];
+}
+
+function handleWrongAreaDrop() {
+    showDialog(getRandomWrongAreaMessage(), 'error');
+    timeLeft = Math.max(0, timeLeft - 5); // Subtract 5 seconds but don't go below 0
+    timeDisplay.textContent = timeLeft;
+    playSound('drop'); // Optional: You might want to add a different sound for wrong drops
+    
+    if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        clearInterval(movementInterval);
+        gameInProgress = false;
+        stopBackgroundMusic();
+        characterArea.style.transform = 'translateX(0)';
+        hairSelectionContainer.classList.add('hidden');
+        successMessage.classList.remove('hidden');
+        successMessage.querySelector('h2').textContent = "Time's up!";
+        successMessage.querySelector('p').textContent = 'Better luck next time!';
+    }
 }
 
 function getProgressMessage(hairCount) {
@@ -52,7 +85,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (toGameBtn) {
         toGameBtn.addEventListener('click', () => {
             showPage(3);
-            // Optionally, you could auto-play the video and only enable the button after video ends
+            // Start timer and movement when continuing to game
+            startTimer();
+            startMovement();
+            startBackgroundMusic(100);
         });
     }
     if (restartBtn) {
@@ -76,12 +112,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const successMessage = page3.querySelector('#success-message');
     const manImage = page3.querySelector('#man-image');
     const placedHairContainer = page3.querySelector('#placed-hair-container');
+    
+    // Add event listener for wrong area drops
+    characterArea.addEventListener('dragover', (e) => {
+        // Only prevent default if we're not over the drop zone
+        if (!e.target.matches('#drop-zone')) {
+            e.preventDefault();
+            if (gameInProgress) {
+                e.dataTransfer.dropEffect = 'copy';
+            }
+        }
+    });
+
+    characterArea.addEventListener('drop', (e) => {
+        // If we're not dropping on the drop zone, it's a wrong area
+        if (!e.target.matches('#drop-zone') && gameInProgress) {
+            e.preventDefault();
+            handleWrongAreaDrop();
+        }
+    });
     const resetButton = page3.querySelector('#reset-button');
 
     let gameInProgress = true;
     let hairCount = 0;
-    const hairsToWin = 10;
-    let timeLeft = 60;
+    const hairsToWin = 20;
+    let timeLeft = 90;
     let timerInterval;
     let movementInterval;
 
@@ -128,11 +183,6 @@ document.addEventListener('DOMContentLoaded', () => {
     loadSound('pickup', 'pickup.mp3');
     loadSound('drop', 'drop.mp3');
     loadSound('success', 'success.mp3');
-    startBackgroundMusic(100);
-
-    // Start the timer and movement
-    startTimer();
-    startMovement();
 
     hairOptions.forEach(hairEl => {
         hairEl.addEventListener('dragstart', (e) => {
@@ -191,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Show message every 5 hairs
             if (hairCount % 5 === 0) {
-                showDialog(getProgressMessage(hairCount));
+                showDialog(getProgressMessage(hairCount), 'success');
             }
 
             if (hairCount >= hairsToWin) {
@@ -206,16 +256,42 @@ document.addEventListener('DOMContentLoaded', () => {
         clearInterval(timerInterval);
         clearInterval(movementInterval);
         stopBackgroundMusic();
-        manImage.src = 'sucsess happy man.png'; // Use your happy man image
+        
+        // Create transition effect
+        const transitionImg = document.createElement('img');
+        transitionImg.style.position = 'absolute';
+        transitionImg.style.top = '0';
+        transitionImg.style.left = '0';
+        transitionImg.style.width = '100%';
+        transitionImg.style.height = '100%';
+        transitionImg.style.opacity = '0';
+        transitionImg.src = 'sucsess happy man.png';
+        transitionImg.style.transition = 'opacity 1.5s ease-in-out';
+        
+        // Add transition image on top of current image
+        characterArea.appendChild(transitionImg);
         characterArea.style.transform = 'translateX(0)';
+        
+        // Trigger fade in
+        setTimeout(() => {
+            transitionImg.style.opacity = '1';
+        }, 100);
+        
+        // After transition completes, clean up
+        setTimeout(() => {
+            manImage.src = 'sucsess happy man.png';
+            transitionImg.remove();
+        }, 1600);
+
         hairSelectionContainer.classList.add('hidden');
         successMessage.classList.remove('hidden');
         playWinSound();
         playSound('success');
-        // After a short delay, go to ending page
+        
+        // After a longer delay to enjoy the happy face, go to ending page
         setTimeout(() => {
             showPage(4);
-        }, 2000);
+        }, 4000); // Increased from 2000 to 4000ms for longer view of happy face
     }
 
 
@@ -224,7 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
         clearInterval(movementInterval);
         gameInProgress = true;
         hairCount = 0;
-        timeLeft = 60;
+        timeLeft = 90;
         timeDisplay.textContent = timeLeft;
         startTimer();
         startMovement();

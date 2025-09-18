@@ -11,6 +11,28 @@
     display: block;
 }
 
+/* Video styling */
+#page2:not(.hidden) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#intro-video {
+    max-width: 960px;
+    width: 100%;
+    height: auto;
+    margin: 20px auto;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    display: block; /* Ensure proper display when visible */
+}
+
+#to-game-btn {
+    margin-top: 20px;
+}
+
 #start-btn {
     max-width: 200px;
     transition: transform 0.2s ease;
@@ -77,12 +99,12 @@ header p {
 
 #drop-zone {
     position: absolute;
-    top: 5px;
+    top: 35px;
     left: 50%;
     transform: translateX(-50%);
-    width: 130px;
-    height: 110px;
-    border-radius: 50% / 40%;
+    width: 160px;
+    height: 75px;
+    border-radius: 20% / 50%;
     transition: background-color 0.2s;
 }
 
@@ -95,8 +117,8 @@ header p {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 150%;
+    height: 150%;
     pointer-events: none;
     overflow: hidden; /* Hide hair dropped outside the area */
 }
@@ -233,11 +255,28 @@ header p {
 /* Dialog box styling */
 .dialog-box {
     position: fixed;
-    top: 50%;
+    top: 70%;  /* Changed from 50% to 70% to move it lower */
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: white;
     padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Success dialog style */
+.dialog-box.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+/* Error dialog style */
+.dialog-box.error {
+    background-color: #ffe6e6;
+    color: #721c24;
+    border: 1px solid #ffcccc;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     z-index: 1000;
