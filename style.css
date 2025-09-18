@@ -22,6 +22,10 @@
     height: 100%;
     overflow: hidden;
 }
+@font-face {
+  font-family: "ANCA";
+  src: url("fonts/Anca_Medium.otf") format("truetype");
+}
 
 body {
     display: flex;
@@ -503,22 +507,25 @@ header p {
 #timer {
     top: 380px;
     background-color: #ff4f4f;
-    font-size: 1.2rem;
-    font-weight: bold;
-    font-family: 'Arial Black', sans-serif;
+    font-size: 1.3rem;
+    font-family: 'ANCA';
+    letter-spacing: 3px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     animation: pulse 2s infinite;
     z-index: 1000;
     transition: all 0.3s ease;
+    border: 1px solid #000000;
 }
 
 #hair-counter {
     top: 100px;
     background-color: #4CAF50;
-    font-size: 1.2rem;
-    font-weight: bold;
+    font-size: 1.3rem;
+    font-family: 'ANCA';
+    letter-spacing: 3px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     z-index: 1000;
+    border: 1px solid #000000;
 }
 
 @keyframes pulse {
