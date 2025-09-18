@@ -339,34 +339,46 @@ header p {
     font-size: clamp(0.9rem, 2.5vw, 1rem);
 }
 
+/* Character area - centered in middle of entire screen viewport */
 #character-area {
-    position: relative;
-    width: min(380px, 90vw);
-    height: min(380px, 45vh);
-    margin: 0 auto;
-    flex-grow: 1;
-    z-index: 1;
+    position: fixed !important;
+    top: 50vh !important;
+    left: 50vw !important;
+    transform: translate(-50%, -50%);
+    width: 400px !important;
+    height: 400px !important;
+    z-index: 100 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
 }
 
+/* Man images - all same size, centered, easy to adjust */
 #man-image {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
-    position: relative;
-    z-index: 1;
+    width: 350px !important;
+    height: 350px !important;
+    object-fit: contain !important;
+    display: block !important;
+    position: relative !important;
+    z-index: 101 !important;
+    transition: all 0.3s ease !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 #drop-zone {
     position: absolute;
-    top: 20px;
+    top: 3%;
     left: 50%;
     transform: translateX(-50%);
-    width: 320px;
-    height: 150px;
+    width: 280px;
+    height: 110px;
     border-radius: 20% / 50%;
     transition: background-color 0.2s;
-    z-index: 2;
+    z-index: 102;
 }
 
 #drop-zone.over {
@@ -377,22 +389,24 @@ header p {
 #placed-hair-container {
     position: absolute;
     top: 0;
-    left: -25%;
-    width: 150%;
-    height: 150%;
+    left: 0;
+    width: 100%;
+    height: 100%;
     pointer-events: none;
-    overflow: hidden; /* Hide hair dropped outside the area */
-    z-index: 3;
+    overflow: visible; /* Allow hair to be placed anywhere on the man */
+    z-index: 103;
 }
 
 #placed-hair-container img {
     position: absolute;
     width: 80px;
-    height: 80px;
+    height: auto;  /* Let height adjust to maintain aspect ratio */
+    max-width: 80px;
+    max-height: 80px;
+    object-fit: contain;  /* Maintain aspect ratio without stretching */
     transform-origin: center;
     transition: transform 0.1s linear;
-    margin-left: -40px;  /* Half the width to center */
-    margin-top: -40px;   /* Half the height to center */
+    margin: 0;  /* No offset - hair appears exactly where dropped */
 }
 
 #hair-selection {
@@ -400,6 +414,13 @@ header p {
     width: 100%;
     height: 100%;
     background-color: transparent;
+}
+
+.drag-drop-instruction {
+    display: block;
+    margin: 10px auto;
+    max-width: 200px;
+    height: auto;
 }
 
 .hair-list {
@@ -433,7 +454,6 @@ header p {
 
 .hair-option:hover {
     transform: scale(1.2) !important;  /* 使用 !important 来覆盖各个头发的transform */
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     z-index: 10;  /* 确保悬停的头发显示在最上层 */
 }
 
@@ -765,54 +785,47 @@ header p {
     min-width: 140px;
 }
 
-#timer {
-    left: 1300px;
+/* Timer styling removed - now combined with hair counter */
+
+/* Combined timer and hair counter - fixed circular shape */
+#hair-counter {
+    left: 76%;
+    top: 18%;
     background-color: #ff4f4f;
     font-family: 'ANCA';
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    animation: pulseRight 2s infinite;
     z-index: 1000;
-    transition: all 0.3s ease;
-    border: 1px solid #000000;
-}
-
-/* Fixed circular hair counter that doesn't change size */
-#hair-counter {
-    left: 95%;
-    top: 18%;
-    background-color: #f2563b;
-    font-family: 'ANCA';
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-    border: 1px solid #000000;
+    border: 1px solid #ff4f4f;
     animation: pulseLeft 2s infinite;
     
-    /* Fixed circular dimensions */
-    width: 180px;
-    height: 180px;
-    border-radius: 50%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 0;
-    min-width: 180px;
-    min-height: 180px;
+    /* Fixed circular dimensions - never changes shape */
+    width: 180px !important;
+    height: 180px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 0 !important;
+    min-width: 180px !important;
+    min-height: 180px !important;
+    max-width: 180px !important;
+    max-height: 180px !important;
 }
 
-.top-text, .bottom-text {
-    font-size: 0.8rem;
+.timer-text, .calculator-text {
+    font-size: 0.9rem;
     letter-spacing: 1px;
-    line-height: 1;
+    line-height: 1.2;
     margin: 0;
     text-align: center;
+    color: white;
+    font-weight: bold;
 }
 
-.number {
-    font-size: 2.2rem;
-    font-weight: bold;
-    line-height: 1;
-    margin: 5px 0;
+.spacer {
+    height: 10px;
+    margin: 0;
 }
 
 @keyframes pulseRight {
