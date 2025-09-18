@@ -776,24 +776,40 @@ header p {
     border: 1px solid #000000;
 }
 
+/* Fixed circular hair counter that doesn't change size */
 #hair-counter {
-    left: 200px;
-    background-color: #4CAF50;
+    left: 95%;
+    top: 18%;
+    background-color: #f2563b;
     font-family: 'ANCA';
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     z-index: 1000;
     border: 1px solid #000000;
     animation: pulseLeft 2s infinite;
+    
+    /* Fixed circular dimensions */
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    min-width: 180px;
+    min-height: 180px;
 }
 
 .top-text, .bottom-text {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     letter-spacing: 1px;
     line-height: 1;
+    margin: 0;
+    text-align: center;
 }
 
 .number {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
     font-weight: bold;
     line-height: 1;
     margin: 5px 0;
