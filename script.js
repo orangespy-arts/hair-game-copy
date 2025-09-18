@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let gameInProgress = true;
     let hairCount = 0;
     const hairsToWin = 15;
-    let timeLeft = 60;
+    let timeLeft = 45;
     let timerInterval;
     let movementInterval;
 
@@ -104,9 +104,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const x = e.clientX - dropZoneRect.left;
             const y = e.clientY - dropZoneRect.top;
 
-            // Center the image on the cursor
-            placedHair.style.left = `${x - 15}px`; // half of width
-            placedHair.style.top = `${y - 15}px`; // half of height
+            // Center the image on the cursor with smaller size
+            placedHair.style.left = `${x - 10}px`; // half of new width (20px)
+            placedHair.style.top = `${y - 10}px`; // half of new height (20px)
+            placedHair.style.width = '10x';     // smaller size
+            placedHair.style.height = '10px';
             
             placedHairContainer.appendChild(placedHair);
             
@@ -139,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
         clearInterval(movementInterval);
         gameInProgress = true;
         hairCount = 0;
-        timeLeft = 60;
+        timeLeft = 45;
         timeDisplay.textContent = timeLeft;
         startTimer();
         startMovement();
