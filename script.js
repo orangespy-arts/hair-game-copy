@@ -145,11 +145,26 @@ document.addEventListener('DOMContentLoaded', () => {
     // Video handling
     const video = document.getElementById('intro-video');
     if (video) {
+        const loadingOverlay = document.querySelector('.loading-overlay');
+        const loadingText = document.getElementById('loading-text');
+
+        video.addEventListener('loadstart', () => {
+            loadingOverlay.classList.remove('hidden');
+        });
+
+        video.addEventListener('error', (e) => {
+            console.error('Video error:', video.error);
+            loadingText.textContent = 'Error loading video. Please try again.';
+        });
+
+        video.addEventListener('canplay', () => {
+            loadingOverlay.classList.add('hidden');
+        });
+
         video.addEventListener('ended', () => {
             showPage(3);
             startTimer();
             startMovement();
-            startBackgroundMusic(100);  // Restore this line
         });
     }
 

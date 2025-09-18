@@ -220,17 +220,10 @@ body {
 }
 
 #intro-video {
-    width: 100vw;
-    height: 100vh;
-    margin: 0;
-    padding: 0;
-    border-radius: 0;
-    box-shadow: none;
-    object-fit: cover;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1;
+    width: 100%;
+    max-height: 100vh;
+    margin: auto;
+    object-fit: contain;
 }
 
 #page2 h2 {
@@ -862,4 +855,40 @@ header p {
 #intro-video::-webkit-media-controls-current-time-display,
 #intro-video::-webkit-media-controls-time-remaining-display {
     color: white;
+}
+
+/* Video container and loading spinner styles */
+.video-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+}
+
+.loading-spinner {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    z-index: 1;
+}
+
+.loading-spinner.hidden {
+    display: none;
+}
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    z-index: 1000;
 }
