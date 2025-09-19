@@ -5,7 +5,28 @@ function showDialog(message, type = 'success') {
     const dialogContainer = document.getElementById('dialog-container');
     const dialog = document.createElement('div');
     dialog.className = `dialog-box ${type}`; // Add type class for styling
-    dialog.textContent = message;
+    
+    // Check if message is an image file
+    if (message.endsWith('.png') || message.endsWith('.jpg') || message.endsWith('.gif')) {
+        const img = document.createElement('img');
+        img.src = message;
+        img.alt = 'Wrong area message';
+        
+        // Add specific class based on image name
+        if (message.includes('wrong1.png')) {
+            img.className = 'wrong-message-image wrong1-image';
+        } else if (message.includes('wrong2.png')) {
+            img.className = 'wrong-message-image wrong2-image';
+        } else if (message.includes('wrong3.png')) {
+            img.className = 'wrong-message-image wrong3-image';
+        } else {
+            img.className = 'wrong-message-image';
+        }
+        
+        dialog.appendChild(img);
+    } else {
+        dialog.textContent = message;
+    }
     
     // Remove any existing dialogs
     dialogContainer.innerHTML = '';
@@ -18,17 +39,12 @@ function showDialog(message, type = 'success') {
 }
 
 function getRandomWrongAreaMessage() {
-    const messages = [
-        "Ouch! That's not the right spot! You're making me upset!",
-        "Hey! My face is not a place for hair!",
-        "Come on, focus on my bald spot!",
-        "This isn’t what I meant by hair transplant!",
-        "Nope, that's definitely not where hair goes!",
-        "I need hair on my head, not there!",
-        "That tickles! But it's the wrong spot!",
-        "Are you even trying? That's not my head!"
+    const wrongImages = [
+        "wrong1.png",
+        "wrong2.png", 
+        "wrong3.png"
     ];
-    return messages[Math.floor(Math.random() * messages.length)];
+    return wrongImages[Math.floor(Math.random() * wrongImages.length)];
 }
 
 function handleWrongAreaDrop() {
@@ -42,7 +58,7 @@ function handleWrongAreaDrop() {
         clearInterval(movementInterval);
         gameInProgress = false;
         stopBackgroundMusic();
-        characterArea.style.transform = 'translateX(0)';
+        characterArea.style.setProperty('--movement', '0px');
         hairSelectionContainer.classList.add('hidden');
         successMessage.classList.remove('hidden');
         successMessage.querySelector('h2').textContent = "Time's up!";
@@ -251,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function moveHead() {
         const movement = Math.sin(Date.now() / 1000) * 20; // Smooth sinusoidal movement
-        characterArea.style.transform = `translateX(${movement}px)`;
+        characterArea.style.setProperty('--movement', `${movement}px`);
     }
 
     function startMovement() {
@@ -263,7 +279,8 @@ document.addEventListener('DOMContentLoaded', () => {
             timeLeft--;
             const timeDisplay = document.getElementById('time');
             if (timeLeft > 0) {
-                timeDisplay.textContent = timeLeft;
+                const timerElement = document.getElementById('hair-counter');
+                timerElement.querySelector('.timer-text').innerHTML = `Time Left: <span id="time">${timeLeft}</span> seconds`;
             }
             if (timeLeft <= 0) {
                 clearInterval(timerInterval);
@@ -285,17 +302,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     losingSound.play().catch(e => console.log("Audio play failed:", e));
                 }
                 manImage.src = 'sad_man.png';
-                characterArea.style.transform = 'translateX(0)';
+                characterArea.style.setProperty('--movement', '0px');
                 hairSelectionContainer.classList.add('hidden');
                 successMessage.classList.remove('hidden');
                 successMessage.querySelector('h2').textContent = "Time's up!";
                 successMessage.querySelector('p').textContent = 'Better luck next time!';
                 
                 // Change timer display to "TIME'S UP!"
-                const timerElement = document.getElementById('timer');
-                timerElement.querySelector('.top-text').textContent = "TIME'S";
-                timerElement.querySelector('.number').textContent = "UP";
-                timerElement.querySelector('.bottom-text').textContent = "!";
+                const timerElement = document.getElementById('hair-counter');
+                timerElement.querySelector('.timer-text').textContent = "TIME'S UP!";
+                timerElement.querySelector('.calculator-text').textContent = "Game Over";
                 timerElement.style.backgroundColor = '#ff0000';
                 // Show try again button for losing
                 document.getElementById('try-again-button').classList.remove('hidden');
@@ -353,29 +369,18 @@ document.addEventListener('DOMContentLoaded', () => {
             // apply a class for variant so it inherits same tint/visual style
             if (hairVariant) placedHair.classList.add(`placed-${hairVariant}`);
             
-            // Position the hair where it was dropped
-            const dropZoneRect = dropZone.getBoundingClientRect();
+            // Position the hair relative to the man's image
+            const manImageRect = manImage.getBoundingClientRect();
             
-            // Get position relative to the drop zone
-            let x = e.clientX - dropZoneRect.left;
-            let y = e.clientY - dropZoneRect.top;
+            // Get position relative to the man's image (exact drop position)
+            const x = e.clientX - manImageRect.left;
+            const y = e.clientY - manImageRect.top;
             
-            // Constrain the position to stay within the drop zone boundaries
-            // Account for hair size (80px from CSS)
-            const hairSize = 80;
-            const halfHair = hairSize / 2;
+            // Convert to percentage relative to man's image
+            const xPercent = (x / manImageRect.width) * 100;
+            const yPercent = (y / manImageRect.height) * 100;
             
-            // Constrain x position
-            x = Math.max(halfHair, Math.min(dropZoneRect.width - halfHair, x));
-            
-            // Constrain y position
-            y = Math.max(halfHair, Math.min(dropZoneRect.height - halfHair, y));
-            
-            // Convert to percentage
-            const xPercent = (x / dropZoneRect.width) * 100;
-            const yPercent = (y / dropZoneRect.height) * 100;
-            
-            // Set the position
+            // Set the exact position where dropped relative to man's image
             placedHair.style.left = `${xPercent}%`;
             placedHair.style.top = `${yPercent}%`;
             
@@ -386,12 +391,9 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Update the hair counter
             const remainingHairs = hairsToWin - hairCount;
-            hairsRemainingDisplay.textContent = remainingHairs;
-            if (remainingHairs === 1) {
-                document.getElementById('hair-counter').textContent = 'Just 1 more hair to go!';
-            } else if (remainingHairs > 0) {
-                document.getElementById('hair-counter').textContent = `Place ${remainingHairs} hairs to make him happy!`;
-            }
+            const timerElement = document.getElementById('hair-counter');
+            timerElement.querySelector('.calculator-text').innerHTML = `Hairs Needed: <span id="hairs-remaining">${remainingHairs}</span> to win`;
+            // Hair counter updated above with new structure
 
             // Show message every 5 hairs
             if (hairCount % 5 === 0) {
@@ -424,35 +426,12 @@ document.addEventListener('DOMContentLoaded', () => {
             winningSound.play().catch(e => console.log("Audio play failed:", e));
         }
         
-        // Hide timer and hair counter
-        document.getElementById('timer').style.display = 'none';
+        // Hide combined timer/counter
         document.getElementById('hair-counter').style.display = 'none';
         
-        // Create transition effect
-        const transitionImg = document.createElement('img');
-        transitionImg.style.position = 'absolute';
-        transitionImg.style.top = '0';
-        transitionImg.style.left = '0';
-        transitionImg.style.width = '100%';
-        transitionImg.style.height = '100%';
-        transitionImg.style.opacity = '0';
-        transitionImg.src = 'happy_man.png';
-        transitionImg.style.transition = 'opacity 1.5s ease-in-out';
-        
-        // Add transition image on top of current image
-        characterArea.appendChild(transitionImg);
-        characterArea.style.transform = 'translateX(0)';
-        
-        // Trigger fade in
-        setTimeout(() => {
-            transitionImg.style.opacity = '1';
-        }, 100);
-        
-        // After transition completes, clean up
-        setTimeout(() => {
-            manImage.src = 'happy_man.png';
-            transitionImg.remove();
-        }, 1600);
+        // Simple image change - no expansion effect
+        manImage.src = 'happy_man.png';
+        characterArea.style.setProperty('--movement', '0px');
 
         hairSelectionContainer.classList.add('hidden');
         const instructionText = document.querySelector('#hair-selection p');
@@ -478,12 +457,11 @@ document.addEventListener('DOMContentLoaded', () => {
         timeLeft = 15;
         
         // Reset timer to original state
-        const timerElement = document.getElementById('timer');
-        timerElement.style.fontSize = '1.2rem';  // Reset to original size
+        const timerElement = document.getElementById('hair-counter');
         timerElement.style.backgroundColor = '#ff4f4f';  // Reset to original color
-        timerElement.style.padding = '12px 20px';  // Reset to original padding
         timerElement.style.display = 'block';  // Make sure it's visible
-        timerElement.textContent = `You have ${timeLeft} seconds left to make him look different!`;
+        timerElement.querySelector('.timer-text').innerHTML = `Time Left: <span id="time">${timeLeft}</span> seconds`;
+        timerElement.querySelector('.calculator-text').innerHTML = `Hairs Needed: <span id="hairs-remaining">5</span> to win`;
         
         startTimer();
         startMovement();

@@ -71,16 +71,11 @@
         <div id="dialog-container"></div>
         <div id="game-container">
             <header>
-                <h1>DRAG & DROP</h1>
-                <div id="timer">
-                    <div class="top-text">Time Left</div>
-                    <div class="number"><span id="time">15</span></div>
-                    <div class="bottom-text">seconds</div>
-                </div>
+                <img src="drag_drop.png" alt="Drag hair onto his head!" class="drag-drop-instruction">
                 <div id="hair-counter">
-                    <div class="top-text">Hairs Needed</div>
-                    <div class="number"><span id="hairs-remaining">5</span></div>
-                    <div class="bottom-text">to win</div>
+                    <div class="timer-text">Time Left: <span id="time">15</span> seconds</div>
+                    <div class="spacer"></div>
+                    <div class="calculator-text">Hairs Needed: <span id="hairs-remaining">5</span> to win</div>
                 </div>
             </header>
 
@@ -100,14 +95,12 @@
             </div>
             
             <div id="failure-message" class="hidden">
-                <h2>Time's Up!</h2>
-                <p>Better luck next time!</p>
                 <img src="back_botton.png" id="back-button-fail" class="nav-button hidden" alt="Back to Home" style="cursor: pointer;">
                 <img src="try_again_button.png" id="try-again-button-fail" class="nav-button hidden" alt="Try Again" style="cursor: pointer;">
             </div>
 
             <footer id="hair-selection">
-                <!-- <p>Drag hair onto his head!</p> -->
+    
                 <div class="hair-list">
                     <!-- Original hairs -->
                     <img src="hair1.png" class="hair-option hair-dark straight" draggable="true" alt="Dark straight strand" data-variant="dark-straight">
