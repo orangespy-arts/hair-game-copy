@@ -67,41 +67,28 @@ function showPage(pageNum) {
         page.classList.add('hidden');
     });
     
-    // Stop all BGM first
-    const bgm = document.getElementById('bgm');
     const homeBgm = document.getElementById('home-bgm');
-    if (bgm) {
-        bgm.pause();
-        bgm.currentTime = 0;
-    }
-    if (homeBgm) {
+    // Stop home BGM when leaving page 1
+    if (pageNum !== 1 && homeBgm) {
         homeBgm.pause();
         homeBgm.currentTime = 0;
     }
-    
-    // Show the requested page and play appropriate BGM
+
+    // Show the requested page
     const pageToShow = document.getElementById(`page${pageNum}`);
     if (pageToShow) {
         pageToShow.classList.remove('hidden');
         
-        // Start BGM based on page
-        if (pageNum === 1) {
-            if (homeBgm) {
-                homeBgm.volume = 0.5;
-                homeBgm.play().catch(e => console.log("Home BGM play failed:", e));
-            }
-        } else if (pageNum === 3) {
-            if (bgm) {
-                bgm.volume = 0.5;
-                bgm.play().catch(e => console.log("BGM play failed:", e));
-            }
+        // Start home BGM only on page 1
+        if (pageNum === 1 && homeBgm) {
+            homeBgm.play().catch(e => console.log("BGM play failed:", e));
         }
 
-        // If showing page 2, play the video
+        // Handle video on page 2
         if (pageNum === 2) {
             const video = document.getElementById('intro-video');
             if (video) {
-                video.currentTime = 0; // Reset to start
+                video.currentTime = 0;
                 video.play().catch(e => console.log('Video autoplay failed:', e));
             }
         }
@@ -146,7 +133,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const video = document.getElementById('intro-video');
     if (video) {
         const loadingOverlay = document.querySelector('.loading-overlay');
-        const loadingText = document.getElementById('loading-text');
+        const homeBgm = document.getElementById('home-bgm');
+        
+        // Stop BGM when video plays
+        video.addEventListener('play', () => {
+            if (homeBgm) {
+                homeBgm.pause();
+                homeBgm.currentTime = 0;
+            }
+        });
+
+        video.addEventListener('ended', () => {
+            showPage(3);
+            startTimer();
+            startMovement();
+        });
 
         video.addEventListener('loadstart', () => {
             loadingOverlay.classList.remove('hidden');
@@ -159,12 +160,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         video.addEventListener('canplay', () => {
             loadingOverlay.classList.add('hidden');
-        });
-
-        video.addEventListener('ended', () => {
-            showPage(3);
-            startTimer();
-            startMovement();
         });
     }
 
