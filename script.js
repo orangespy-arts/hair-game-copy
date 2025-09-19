@@ -2,12 +2,14 @@ import { initAudio, loadSound, playSound, startBackgroundMusic, stopBackgroundMu
 
 // Dialog management functions
 function showDialog(message, type = 'success') {
+    console.log('showDialog called with:', message, 'type:', type);
     const dialogContainer = document.getElementById('dialog-container');
     const dialog = document.createElement('div');
     dialog.className = `dialog-box ${type}`; // Add type class for styling
     
     // Check if message is an image file
     if (message.endsWith('.png') || message.endsWith('.jpg') || message.endsWith('.gif')) {
+        console.log('Creating image element for:', message);
         const img = document.createElement('img');
         img.src = message;
         img.alt = 'Wrong area message';
@@ -19,9 +21,16 @@ function showDialog(message, type = 'success') {
             img.className = 'wrong-message-image wrong2-image';
         } else if (message.includes('wrong3.png')) {
             img.className = 'wrong-message-image wrong3-image';
+        } else if (message.includes('positive1.png')) {
+            img.className = 'positive-message-image positive1-image';
+            console.log('Assigned positive1-image class');
+        } else if (message.includes('positive2.png')) {
+            img.className = 'positive-message-image positive2-image';
+            console.log('Assigned positive2-image class');
         } else {
             img.className = 'wrong-message-image';
         }
+        console.log('Image className:', img.className);
         
         dialog.appendChild(img);
     } else {
@@ -60,20 +69,46 @@ function handleWrongAreaDrop() {
         stopBackgroundMusic();
         characterArea.style.setProperty('--movement', '0px');
         hairSelectionContainer.classList.add('hidden');
-        successMessage.classList.remove('hidden');
-        successMessage.querySelector('h2').textContent = "Time's up!";
-        successMessage.querySelector('p').textContent = 'Better luck next time!';
+        // Show failure message instead of success message
+        const failureMessage = document.getElementById('failure-message');
+        if (failureMessage) {
+            failureMessage.classList.remove('hidden');
+            console.log('Failure message div shown:', !failureMessage.classList.contains('hidden'));
+        }
+        
+        // Hide success message
+        successMessage.classList.add('hidden');
         document.getElementById('man-image').src = 'sad_man.png';
+        
+        // Show try again button for losing
+        console.log('Showing try again button for losing');
+        const tryAgainBtn = document.getElementById('try-again-button-fail');
+        const backBtn = document.getElementById('back-button-fail');
+        console.log('Try again button found:', tryAgainBtn);
+        console.log('Back button found:', backBtn);
+        
+        if (tryAgainBtn) {
+            tryAgainBtn.classList.remove('hidden');
+            console.log('Try again button hidden class removed');
+        } else {
+            console.error('Try again button not found!');
+        }
+        
+        if (backBtn) {
+            backBtn.classList.add('hidden');
+            console.log('Back button hidden class added');
+        } else {
+            console.error('Back button not found!');
+        }
     }
 }
 
 function getProgressMessage(hairCount) {
     const messages = {
-        5: "Looking good! Keep going!",
-        10: "That's the spirit! He's starting to smile!",
-        15: "Almost there! Just a few more strands!"
+        4: "positive1.png",
+        8: "positive2.png",
     };
-    return messages[hairCount] || "Nice work!";
+    return messages[hairCount] || "positive1.png";
 }
 
 // --- PAGE NAVIGATION LOGIC ---
@@ -161,6 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         video.addEventListener('ended', () => {
             showPage(3);
+            manImage.src = 'simple_man.png'; // Ensure man starts as simple_man
             startTimer();
             startMovement();
         });
@@ -189,6 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (toGameBtn) {
         toGameBtn.addEventListener('click', () => {
             showPage(3);
+            manImage.src = 'simple_man.png'; // Ensure man starts as simple_man
             startTimer();
             startMovement();
             startBackgroundMusic(100);  // Restore this line
@@ -205,20 +242,61 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add event listeners for the new image buttons
     const backButton = document.getElementById('back-button');
     const tryAgainButton = document.getElementById('try-again-button');
+    const backButtonFail = document.getElementById('back-button-fail');
+    const tryAgainButtonFail = document.getElementById('try-again-button-fail');
+    
+    console.log('Button initialization:');
+    console.log('Back button found:', backButton);
+    console.log('Try again button found:', tryAgainButton);
+    console.log('Back button fail found:', backButtonFail);
+    console.log('Try again button fail found:', tryAgainButtonFail);
 
+    // Success message buttons
     if (backButton) {
         backButton.addEventListener('click', () => {
+            console.log('Back button clicked - going to page 1');
             playSound('success');
             showPage(1);
             window.location.reload();
         });
+        console.log('Back button event listener added');
+    } else {
+        console.error('Back button not found during initialization!');
     }
 
     if (tryAgainButton) {
         tryAgainButton.addEventListener('click', () => {
+            console.log('Try again button clicked - resetting game');
             playSound('success');
             resetGame();
         });
+        console.log('Try again button event listener added');
+    } else {
+        console.error('Try again button not found during initialization!');
+    }
+
+    // Failure message buttons
+    if (backButtonFail) {
+        backButtonFail.addEventListener('click', () => {
+            console.log('Back button fail clicked - going to page 1');
+            playSound('success');
+            showPage(1);
+            window.location.reload();
+        });
+        console.log('Back button fail event listener added');
+    } else {
+        console.error('Back button fail not found during initialization!');
+    }
+
+    if (tryAgainButtonFail) {
+        tryAgainButtonFail.addEventListener('click', () => {
+            console.log('Try again button fail clicked - resetting game');
+            playSound('success');
+            resetGame();
+        });
+        console.log('Try again button fail event listener added');
+    } else {
+        console.error('Try again button fail not found during initialization!');
     }
 
     // --- GAME LOGIC BELOW (only runs when page 3 is shown) ---
@@ -257,13 +335,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let gameInProgress = true;
     let hairCount = 0;
-    const hairsToWin = 5;
-    let timeLeft = 15;
+    const hairsToWin = 12;
+    let timeLeft = 30;
     let timerInterval;
     let movementInterval;
 
     const timeDisplay = page3.querySelector('#time');
     const hairsRemainingDisplay = page3.querySelector('#hairs-remaining');
+
+    // Unified function to update hair counter display
+    function updateHairCounter(remainingHairs = hairsToWin) {
+        const timerElement = document.getElementById('hair-counter');
+        timerElement.querySelector('.calculator-text').innerHTML = `Hairs Needed: <span id="hairs-remaining">${remainingHairs}</span> to win`;
+    }
 
     function moveHead() {
         const movement = Math.sin(Date.now() / 1000) * 20; // Smooth sinusoidal movement
@@ -271,7 +355,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function startMovement() {
-        movementInterval = setInterval(moveHead, 16);
+        // Movement disabled - man stays still
+        // movementInterval = setInterval(moveHead, 16);
     }
 
     function startTimer() {
@@ -304,18 +389,43 @@ document.addEventListener('DOMContentLoaded', () => {
                 manImage.src = 'sad_man.png';
                 characterArea.style.setProperty('--movement', '0px');
                 hairSelectionContainer.classList.add('hidden');
-                successMessage.classList.remove('hidden');
-                successMessage.querySelector('h2').textContent = "Time's up!";
-                successMessage.querySelector('p').textContent = 'Better luck next time!';
+                
+                // Show failure message instead of success message
+                const failureMessage = document.getElementById('failure-message');
+                if (failureMessage) {
+                    failureMessage.classList.remove('hidden');
+                    console.log('Failure message div shown for timer loss');
+                }
+                
+                // Hide success message
+                successMessage.classList.add('hidden');
                 
                 // Change timer display to "TIME'S UP!"
                 const timerElement = document.getElementById('hair-counter');
                 timerElement.querySelector('.timer-text').textContent = "TIME'S UP!";
                 timerElement.querySelector('.calculator-text').textContent = "Game Over";
                 timerElement.style.backgroundColor = '#ff0000';
+                
                 // Show try again button for losing
-                document.getElementById('try-again-button').classList.remove('hidden');
-                document.getElementById('back-button').classList.add('hidden');
+                console.log('Showing try again button for timer loss');
+                const tryAgainBtn = document.getElementById('try-again-button-fail');
+                const backBtn = document.getElementById('back-button-fail');
+                console.log('Try again button found:', tryAgainBtn);
+                console.log('Back button found:', backBtn);
+                
+                if (tryAgainBtn) {
+                    tryAgainBtn.classList.remove('hidden');
+                    console.log('Try again button hidden class removed');
+                } else {
+                    console.error('Try again button not found!');
+                }
+                
+                if (backBtn) {
+                    backBtn.classList.add('hidden');
+                    console.log('Back button hidden class added');
+                } else {
+                    console.error('Back button not found!');
+                }
             }
         }, 1000);
     }
@@ -391,13 +501,13 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Update the hair counter
             const remainingHairs = hairsToWin - hairCount;
-            const timerElement = document.getElementById('hair-counter');
-            timerElement.querySelector('.calculator-text').innerHTML = `Hairs Needed: <span id="hairs-remaining">${remainingHairs}</span> to win`;
-            // Hair counter updated above with new structure
+            updateHairCounter(remainingHairs);
 
-            // Show message every 5 hairs
-            if (hairCount % 5 === 0) {
-                showDialog(getProgressMessage(hairCount), 'success');
+            // Show message every 4 hairs
+            if (hairCount % 4 === 0) {
+                const progressMessage = getProgressMessage(hairCount);
+                console.log('Showing progress message:', progressMessage, 'for hair count:', hairCount);
+                showDialog(progressMessage, 'success');
             }
 
             if (hairCount >= hairsToWin) {
@@ -439,11 +549,33 @@ document.addEventListener('DOMContentLoaded', () => {
          instructionText.classList.add('hidden');
         }
         successMessage.classList.remove('hidden');
-        successMessage.querySelector('h2').textContent = "Looking sharp!";
-        successMessage.querySelector('p').textContent = "He feels like a new man! Thanks to you.";
+        
+        // Try to set text content if elements exist
+        const h2Element = successMessage.querySelector('h2');
+        const pElement = successMessage.querySelector('p');
+        if (h2Element) h2Element.textContent = "Looking sharp!";
+        if (pElement) pElement.textContent = "He feels like a new man! Thanks to you.";
+        
         // Show back button for winning
-        document.getElementById('back-button').classList.remove('hidden');
-        document.getElementById('try-again-button').classList.add('hidden');
+        console.log('Showing back button for winning');
+        const tryAgainBtn = document.getElementById('try-again-button');
+        const backBtn = document.getElementById('back-button');
+        console.log('Try again button found:', tryAgainBtn);
+        console.log('Back button found:', backBtn);
+        
+        if (backBtn) {
+            backBtn.classList.remove('hidden');
+            console.log('Back button hidden class removed');
+        } else {
+            console.error('Back button not found!');
+        }
+        
+        if (tryAgainBtn) {
+            tryAgainBtn.classList.add('hidden');
+            console.log('Try again button hidden class added');
+        } else {
+            console.error('Try again button not found!');
+        }
         playWinSound();
         playSound('success');
     }
@@ -454,21 +586,29 @@ document.addEventListener('DOMContentLoaded', () => {
         clearInterval(movementInterval);
         gameInProgress = true;
         hairCount = 0;
-        timeLeft = 15;
+        timeLeft = 30;
         
         // Reset timer to original state
         const timerElement = document.getElementById('hair-counter');
         timerElement.style.backgroundColor = '#ff4f4f';  // Reset to original color
         timerElement.style.display = 'block';  // Make sure it's visible
         timerElement.querySelector('.timer-text').innerHTML = `Time Left: <span id="time">${timeLeft}</span> seconds`;
-        timerElement.querySelector('.calculator-text').innerHTML = `Hairs Needed: <span id="hairs-remaining">5</span> to win`;
+        updateHairCounter(); // Reset to default 12 hairs
         
+
         startTimer();
         startMovement();
         placedHairContainer.innerHTML = '';
         manImage.src = 'simple_man.png';
         hairSelectionContainer.classList.remove('hidden');
         successMessage.classList.add('hidden');
+        
+        // Hide failure message as well
+        const failureMessage = document.getElementById('failure-message');
+        if (failureMessage) {
+            failureMessage.classList.add('hidden');
+        }
+        
         startBackgroundMusic(100);  // Restore this line
     }
 

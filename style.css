@@ -360,6 +360,7 @@ header p {
     transition: all 0.3s ease !important;
     margin: 0 !important;
     padding: 0 !important;
+    pointer-events: none !important; /* Make man image not clickable */
 }
 
 #drop-zone {
@@ -662,8 +663,14 @@ header p {
     transform: rotate(-8deg);
 }
 
-#success-message {
+#success-message, #failure-message {
     padding: 1rem;
+    position: absolute;
+    top: 90%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    text-align: center;
 }
 
 .nav-button {
@@ -799,23 +806,83 @@ header p {
 .dialog-box.error:has(.wrong1-image) {
     /* Customize wrong1 dialog position */
     top: 35%;  /* Adjust vertical position for wrong1 */
-    left: 30%; /* Adjust horizontal position for wrong1 */
+    left: 70%; /* Adjust horizontal position for wrong1 */
 }
 
 .dialog-box.error:has(.wrong2-image) {
     /* Customize wrong2 dialog position */
     top: 45%;  /* Adjust vertical position for wrong2 */
-    left: 70%; /* Adjust horizontal position for wrong2 */
+    left: 30%; /* Adjust horizontal position for wrong2 */
 }
 
 .dialog-box.error:has(.wrong3-image) {
     /* Customize wrong3 dialog position */
     top: 30%;  /* Adjust vertical position for wrong3 */
-    left: 30%; /* Adjust horizontal position for wrong3 */
+    left: 70%; /* Adjust horizontal position for wrong3 */
 }
 
-/* Success dialog style */
-.dialog-box.success {
+/* Positive message image styling - similar to wrong images */
+.positive-message-image {
+    max-width: min(300px, 25vw);  /* Responsive width: max 300px or 25% of viewport width */
+    max-height: min(200px, 20vh); /* Responsive height: max 200px or 20% of viewport height */
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+    border-radius: 0 !important; /* Remove border radius */
+    box-shadow: none !important; /* Remove shadow */
+    border: none !important; /* Remove any border */
+    background: transparent !important; /* Ensure transparent background */
+}
+
+/* Individual positive image styles - you can adjust each one separately */
+
+/* Positive1.png - customize position and size */
+.positive1-image {
+    max-width: min(250px, 20vw);  /* Adjust width for positive1 */
+    max-height: min(180px, 18vh); /* Adjust height for positive1 */
+    /* Position adjustments - uncomment and modify as needed */
+    /* margin-top: 20px; */
+    /* margin-left: 10px; */
+}
+
+/* Positive2.png - customize position and size */
+.positive2-image {
+    max-width: min(350px, 30vw);  /* Adjust width for positive2 */
+    max-height: min(220px, 22vh); /* Adjust height for positive2 */
+    /* Position adjustments - uncomment and modify as needed */
+    /* margin-top: -10px; */
+    /* margin-right: 15px; */
+}
+
+/* Success dialog with positive image - adjust position relative to window */
+.dialog-box.success:has(.positive-message-image) {
+    background-color: transparent !important; /* Make background completely transparent */
+    border: none !important;
+    padding: 0 !important; /* Remove all padding */
+    box-shadow: none !important; /* Remove shadow */
+    /* Position can be easily adjusted here */
+    top: 40%;  /* Adjust vertical position: 50% = center, 70% = lower */
+    left: 50%; /* Adjust horizontal position: 50% = center */
+    transform: translate(-50%, -50%);
+}
+
+/* Individual dialog positioning for each positive image */
+.dialog-box.success:has(.positive1-image) {
+    /* Customize positive1 dialog position */
+    top: 45%;  /* Adjust vertical position for positive1 */
+    left: 70%; /* Adjust horizontal position for positive1 */
+}
+
+.dialog-box.success:has(.positive2-image) {
+    /* Customize positive2 dialog position */
+    top: 45%;  /* Adjust vertical position for positive2 */
+    left: 30%; /* Adjust horizontal position for positive2 */
+}
+
+/* Success dialog style - for text messages only */
+.dialog-box.success:not(:has(img)) {
     background-color: #d4edda;
     color: #155724;
     border: 1px solid #c3e6cb;
@@ -857,8 +924,8 @@ header p {
 
 /* Combined timer and hair counter - fixed circular shape */
 #hair-counter {
-    left: 76%;
-    top: 18%;
+    left: 1%;
+    top: 24%;
     background-color: #ff4f4f;
     font-family: 'ANCA';
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
